@@ -1,0 +1,144 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css");
+
+@font-face {
+    font-family: "khaira";
+    src: url("../assets/fonts/KHAIRA.ttf") format("truetype");
+}
+
+body {
+    margin: 0;
+    background-color: #fff1e1;
+    display: flex;
+    justify-content: center;
+    min-width: 365px;
+}
+
+body * {
+    font-family: khaira;
+}
+
+h1 {
+    text-align: center;
+    font-size: 1vmax;
+    letter-spacing: 0.5vmax;
+    color: #745c3d;
+}
+
+a {
+    text-decoration: none;
+    color: unset;
+}
+
+.decorate-button {
+    transition: color 0.3s, transform 0.3s, filter 0.3s ease-in-out;
+}
+
+.decorate-button:hover {
+    color: #ef9d10;
+    transform: scale(1.05);
+}
+
+.decorate-button:active {
+    transform: scale(0.8);
+}
+
+.wrapper {
+    margin-top: 2vh;
+    width: 50vmax;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2vh;
+}
+
+.logo {
+    text-align: center;
+}
+
+.logo img {
+    width: 30%;
+}
+
+.quiz-type-menu {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 2vmax;
+    align-items: center;
+}
+
+.quiz-type-btn {
+    font-size: 1vmax;
+    color: #4a536b;
+    font-weight: 200;
+    letter-spacing: 0.5vmax;
+    width: 30vmax;
+    text-transform: uppercase;
+    text-align: center;
+    transition: transform 0.2s ease-in-out, color 0.2s;
+    cursor: pointer;
+}
+
+.quiz-type-btn:hover {
+    transform: rotateZ(1deg) scale(1.01, 1.01);
+    color: #ef9d10;
+}
+
+.quiz-type-btn img {
+    width: 100%;
+    border-radius: 1vmax;
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.quiz-type-btn:active {
+    transform: rotateZ(-1deg);
+}
+
+.footer {
+    padding: 0.5vmax 2vmax 0.5vmax 2vmax;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1vmax;
+    color: #4a536b;
+    border-radius: 2.5vmin;
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+}
+
+.gh-footer-link {
+    font-size: 2.5vmax;
+}
+
+.rss-footer-link {
+    height: 2.5vmax;
+}
+
+.rss-footer-link:hover {
+    filter: invert(64%) sepia(73%) saturate(1506%) hue-rotate(356deg) brightness(98%) contrast(92%);
+}
+
+@media (max-width: 1440px) {
+    .wrapper {
+        width: 70vmax;
+    }
+    .quiz-type-btn {
+        width: 32vmax;
+    }
+}
+
+@media (max-width: 1024px) {
+    .wrapper {
+        width: 80vmax;
+    }
+    .quiz-type-btn {
+        width: 40vmax;
+    }
+}
+
+@media (max-width: 768px) {
+    .wrapper {
+        width: 40vmax;
+    }
+    .quiz-type-menu {
+        flex-direction: column;
+    }
+}

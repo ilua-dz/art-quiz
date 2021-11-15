@@ -1,0 +1,24 @@
+input[type="range"]::-webkit-slider-runnable-track {
+  transition: all 0.2s ease-in-out;
+  height: 5px;
+}
+
+input[type="range"]:not([disabled]):hover::-webkit-slider-runnable-track {
+  background: var(--hover-color);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 2px solid var(--text-color);
+  background: var(--text-color);
+  transition: all 0.2s ease-in-out;
+}
+
+input[type="range"]:not([disabled]):hover::-webkit-slider-thumb {
+  background: var(--hover-color);
+}
+
+input[type="range"]:disabled::-webkit-slider-thumb {
+  border: none;
+  background: gainsboro;
+}

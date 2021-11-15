@@ -1,144 +1,230 @@
-@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css");
+@import url("https://pro.fontawesome.com/releases/v6.0.0-beta2/css/all.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css");
+
+@import url("./input_range.css");
 
 @font-face {
-    font-family: "khaira";
-    src: url("../assets/fonts/KHAIRA.ttf") format("truetype");
+  font-family: "khaira";
+  src: url("../assets/fonts/KHAIRA.ttf") format("truetype");
+}
+
+:root {
+  --text-color: #4a536b;
+  --hover-color: #ef9d10;
 }
 
 body {
-    margin: 0;
-    background-color: #fff1e1;
-    display: flex;
-    justify-content: center;
-    min-width: 365px;
+  margin: 0;
+  background-color: #fff1e1;
+  display: flex;
+  justify-content: center;
+  min-width: 320px;
 }
 
 body * {
-    font-family: khaira;
+  font-family: khaira;
+  box-sizing: border-box;
 }
 
-h1 {
-    text-align: center;
-    font-size: 1vmax;
-    letter-spacing: 0.5vmax;
-    color: #745c3d;
+ul {
+  list-style: none;
+}
+
+h2 {
+  margin: 1vmin 0 3vmin 0;
+  text-align: center;
+  font-size: 1vmax;
+  letter-spacing: 0.5vmax;
+  color: #745c3d;
+  text-transform: uppercase;
+}
+
+h3 {
+  margin: 2vmin 0 2vmin 0;
+  font-size: 2vmax;
 }
 
 a {
-    text-decoration: none;
-    color: unset;
+  text-decoration: none;
+  color: unset;
 }
 
 .decorate-button {
-    transition: color 0.3s, transform 0.3s, filter 0.3s ease-in-out;
+  color: var(--text-color);
+  cursor: pointer;
+  transform: scale(1);
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out, filter 0.3s ease-in-out;
 }
 
 .decorate-button:hover {
-    color: #ef9d10;
-    transform: scale(1.05);
+  color: #ef9d10;
+  transform: scale(1.1, 1.1);
 }
 
 .decorate-button:active {
-    transform: scale(0.8);
+  transform: scale(0.8, 0.8);
 }
 
 .wrapper {
-    margin-top: 2vh;
-    width: 50vmax;
-    display: flex;
-    flex-direction: column;
-    row-gap: 2vh;
+  margin-top: 2vh;
+  width: 50vmax;
+  display: flex;
+  flex-direction: column;
+  row-gap: 2vh;
 }
 
 .logo {
-    text-align: center;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  color: var(--text-color);
+  margin: 0 0.5vmax 0 0.5vmax;
 }
 
 .logo img {
-    width: 30%;
+  width: 28%;
 }
 
 .quiz-type-menu {
-    display: flex;
-    justify-content: space-between;
-    column-gap: 2vmax;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  column-gap: 2vmax;
+  align-items: center;
 }
 
 .quiz-type-btn {
-    font-size: 1vmax;
-    color: #4a536b;
-    font-weight: 200;
-    letter-spacing: 0.5vmax;
-    width: 30vmax;
-    text-transform: uppercase;
-    text-align: center;
-    transition: transform 0.2s ease-in-out, color 0.2s;
-    cursor: pointer;
+  font-size: 1vmax;
+  color: var(--text-color);
+  font-weight: 200;
+  letter-spacing: 0.5vmax;
+  width: 30vmax;
+  text-transform: uppercase;
+  text-align: center;
+  transition: transform 0.2s ease-in-out, color 0.2s;
+  cursor: pointer;
 }
 
 .quiz-type-btn:hover {
-    transform: rotateZ(1deg) scale(1.01, 1.01);
-    color: #ef9d10;
+  transform: rotateZ(1deg) scale(1.01, 1.01);
+  color: #ef9d10;
 }
 
 .quiz-type-btn img {
-    width: 100%;
-    border-radius: 1vmax;
-    transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+  width: 100%;
+  border-radius: 1vmax;
+  transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .quiz-type-btn:active {
-    transform: rotateZ(-1deg);
+  transform: rotateZ(-1deg);
 }
 
 .footer {
-    padding: 0.5vmax 2vmax 0.5vmax 2vmax;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1vmax;
-    color: #4a536b;
-    border-radius: 2.5vmin;
-    border-top: 2px solid;
-    border-bottom: 2px solid;
+  position: relative;
+  padding: 0.5vmax 2vmax 0.5vmax 2vmax;
+  margin: 0 0.5vmax 0 0.5vmax;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1vmax;
+  color: var(--text-color);
+  border-radius: 2.5vmin;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
 }
 
-.gh-footer-link {
-    font-size: 2.5vmax;
+.footer span {
+  position: absolute;
+  left: calc(50% - 4vmax);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.fa-sizing {
+  display: block;
+  font-size: 2.5vmax;
+  width: 6vmax;
+  text-align: center;
 }
 
 .rss-footer-link {
-    height: 2.5vmax;
+  height: 2.5vmax;
 }
 
 .rss-footer-link:hover {
-    filter: invert(64%) sepia(73%) saturate(1506%) hue-rotate(356deg) brightness(98%) contrast(92%);
+  filter: invert(64%) sepia(73%) saturate(1506%) hue-rotate(356deg) brightness(98%) contrast(92%);
+}
+
+.settings-list {
+  display: flex;
+  row-gap: 5vh;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.settings-list > li {
+  display: flex;
+  column-gap: 2vw;
+  align-items: center;
+  justify-content: center;
+  width: 40vw;
+  min-width: 34vmax;
+}
+
+.setting-descr {
+  width: 20vmax;
+  font-size: 1vmax;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+/* .settings-back {
+  margin-top: auto;
+  margin-bottom: auto;
+} */
+
+.settings-module {
+  display: none;
+}
+
+.settings-module,
+.start-module {
+  height: 65vh;
+  transition: opacity 0.3s ease-in-out;
 }
 
 @media (max-width: 1440px) {
-    .wrapper {
-        width: 70vmax;
-    }
-    .quiz-type-btn {
-        width: 32vmax;
-    }
+  .wrapper {
+    width: 70vmax;
+  }
+  .quiz-type-btn {
+    width: 32vmax;
+  }
 }
 
-@media (max-width: 1024px) {
-    .wrapper {
-        width: 80vmax;
-    }
-    .quiz-type-btn {
-        width: 40vmax;
-    }
+@media (max-width: 1023px) {
+  .wrapper {
+    width: 80vmax;
+  }
+  .quiz-type-btn {
+    width: 40vmax;
+  }
 }
 
 @media (max-width: 768px) {
-    .wrapper {
-        width: 40vmax;
-    }
-    .quiz-type-menu {
-        flex-direction: column;
-    }
+  .quiz-type-btn {
+    width: 33vmax;
+  }
+  .wrapper {
+    width: 40vmax;
+  }
+  .quiz-type-menu {
+    flex-direction: column;
+  }
+  .settings-module,
+  .start-module {
+    height: 81vh;
+  }
 }

@@ -2,41 +2,72 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Art-quiz</title>
-    <link rel="shortcut icon" href="./assets/favicon.svg" type="image/x-icon">
-    <link rel="stylesheet" href="./css/style.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art-quiz</title>
+  <link rel="shortcut icon" href="./assets/favicon.svg" type="image/x-icon">
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-    <div class="wrapper">
-        <div class="logo">
-            <img src="./assets/logo.svg" alt="">
+  <div class="wrapper">
+    <div class="logo">
+      <i class="fa-thin fa-gamepad-modern decorate-button fa-sizing _btn"></i>
+      <img src="./assets/logo.svg" alt="">
+      <i class="fa-thin fa-cogs decorate-button fa-sizing _btn settings-btn"></i>
+    </div>
+    <div class="settings-module">
+      <h2>settings</h2>
+      <div class="settings">
+        <ul class="settings-list">
+          <li class="settings-volume">
+            <span class="setting-descr">Sounds volume</span>
+            <i class="fa-thin fa-volume decorate-button fa-sizing volume-toggle _btn"></i>
+            <input type="range" class="settings-volume-range">
+          </li>
+          <li class="settings-volume-music">
+            <span class="setting-descr">Music volume</span>
+            <i class="fa-thin fa-music-slash decorate-button fa-sizing music-toggle _btn"></i>
+            <input type="range" class="settings-music-range">
+          </li>
+          <li class="settings-timer">
+            <span class="setting-descr">Game timer</span>
+            <i class="fa-thin fa-hourglass-clock decorate-button fa-sizing timer-toggle _btn"></i>
+            <input type="range" step="5" min="5" max="30" class="settings-timer-range">
+          </li>
+          <li class="settings-back">
+            <i class="fa-thin fa-rotate-left decorate-button fa-sizing _btn back-btn"></i>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="start-module">
+      <h2>Let's see who knows art better...</h2>
+      <div class="quiz-type-menu">
+        <div class="quiz-type-btn artist-quiz-btn _btn">
+          <img src="./assets/artist_quiz.jpg" alt="">
+          <h3>Artist quiz</h3>
         </div>
-        <h1>Let's see who knows art better...</h1>
-        <div class="quiz-type-menu">
-            <div class="quiz-type-btn artist-quiz-btn">
-                <img src="./assets/artist_quiz.jpg" alt="">
-                <h3>Artist quiz</h3>
-            </div>
-            <div class="quiz-type-btn picture-quiz-btn">
-                <img src="./assets/picture_quiz.jpg" alt="">
-                <h3>Picture quiz</h3>
-            </div>
+        <div class="quiz-type-btn picture-quiz-btn _btn">
+          <img src="./assets/picture_quiz.jpg" alt="">
+          <h3>Picture quiz</h3>
         </div>
-        <footer class="footer">
-            <a target="blank" href="https://github.com/ilua-dz/">
-                <i class="fab fa-github decorate-button gh-footer-link"></i>
-            </a>
-            <span style="text-align: center;">&#169; 2021 <br>ILYA DZYUIN</span>
-            <a target="blank" href="https://rs.school/js/">
-                <img class="decorate-button rss-footer-link" src="./assets/rss_logo.svg" alt="RSSchool">
-            </a>
-        </footer>
+      </div>
     </div>
 
+
+    <footer class="footer">
+      <a target="blank" href="https://github.com/ilua-dz/">
+        <i class="fab fa-github decorate-button fa-sizing _btn"></i>
+      </a>
+      <span>&#169; 2021 <br>ilya dzyuin</span>
+      <a target="blank" href="https://rs.school/js/">
+        <img class="decorate-button rss-footer-link" src="./assets/rss_logo.svg" alt="RSSchool">
+      </a>
+    </footer>
+
+    <script src="./js/script.js"></script>
 </body>
 
 </html>

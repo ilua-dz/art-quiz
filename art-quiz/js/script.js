@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 //! ------------settings
 
 let isTimerOn;
@@ -7,10 +8,11 @@ let soundVolume;
 let isMusicPlaying;
 
 const settingsBtn = document.querySelector('.settings-btn');
-const backBtn = document.querySelector('.back-btn');
+const controlsBtn = document.querySelector('.controls-btn');
+const backBtns = document.querySelectorAll('.back-btn');
 const settingsModule = document.querySelector('.settings-module');
 const startModule = document.querySelector('.start-module');
-let inSettings = false;
+const controlsModule = document.querySelector('.controls-module');
 
 const volumeToggleBtn = document.querySelector('.volume-toggle');
 const volumeInput = document.querySelector('.settings-volume-range');
@@ -21,31 +23,23 @@ const timerInput = document.querySelector('.settings-timer-range');
 const allButtons = document.querySelectorAll('._btn');
 const allInputsTypeRange = document.querySelectorAll('input');
 
-const toggleSettings = () => {
-  if (!inSettings) {
-    startModule.style.display = 'none';
-    settingsModule.style.display = 'block';
-  } else {
-    startModule.style.display = 'block';
-    settingsModule.style.display = 'none';
-  }
-  inSettings = !inSettings;
-};
+const allModules = [startModule, settingsModule, controlsModule];
 
-const smoothChange = () => {
-  startModule.style.opacity = 0;
-  settingsModule.style.opacity = 0;
+const smoothChange = (menu) => {
+  allModules.forEach((module) => { module.style.opacity = '0'; });
   setTimeout(() => {
-    toggleSettings();
+    allModules.forEach((module) => { module.style.display = 'none'; });
+    menu.style.display = 'block';
   }, 300);
   setTimeout(() => {
-    startModule.style.opacity = 1;
-    settingsModule.style.opacity = 1;
+    allModules.forEach((module) => { module.style.opacity = '1'; });
   }, 400);
 };
-
-settingsBtn.addEventListener('click', smoothChange);
-backBtn.addEventListener('click', smoothChange);
+controlsBtn.addEventListener('click', () => smoothChange(controlsModule));
+settingsBtn.addEventListener('click', () => smoothChange(settingsModule));
+backBtns.forEach((btn) => {
+  btn.addEventListener('click', () => smoothChange(startModule));
+});
 
 const audioObj = {
   click: './assets/sounds/click.mp3',
@@ -171,3 +165,21 @@ document.addEventListener('DOMContentLoaded', () => {
   restoreSettings();
   setTimeout(restorePlayingMusic, 200);
 });
+
+//! -----getGallery
+
+// async function getGallery() {
+//   const res = await fetch('./assets/gallery/gallery_data.json');
+//   const data = await res.json();
+//   const category = [];
+//   for (let i = 0; i < data.length; i += 1) {
+//     const item = data[i].category;
+//     if (!category.some((el) => el === item)) category.push(item);
+//   }
+//   console.log(category);
+//   category.forEach((cat) => {
+//     console.log(data.filter((item) => item.category === cat));
+//   });
+// }
+
+// getGallery();

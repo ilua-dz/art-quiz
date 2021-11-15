@@ -189,10 +189,43 @@ a {
   display: none;
 }
 
-.settings-module,
 .start-module {
+  display: none;
+}
+
+.settings-module,
+.start-module,
+.controls-module {
   height: 65vh;
   transition: opacity 0.3s ease-in-out;
+}
+
+.controls-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.controls-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 1vw;
+  width: 30vw;
+}
+
+.controls-item:last-child {
+  margin-top: 4vh;
+  justify-content: center;
+}
+
+.controls-item i {
+  font-size: 3vmax;
+}
+
+.controls-descr {
+  text-transform: uppercase;
+  font-size: 1vmax;
 }
 
 @media (max-width: 1440px) {
@@ -226,5 +259,8 @@ a {
   .settings-module,
   .start-module {
     height: 81vh;
+  }
+  .controls-item {
+    width: 36vmax;
   }
 }

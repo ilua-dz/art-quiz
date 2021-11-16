@@ -185,7 +185,8 @@ a {
   margin-bottom: auto;
 } */
 
-.settings-module {
+.settings-module,
+.controls-module {
   display: none;
 }
 

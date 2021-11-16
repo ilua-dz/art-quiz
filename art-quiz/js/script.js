@@ -157,13 +157,21 @@ const restoreSettings = () => {
 };
 
 const restorePlayingMusic = () => {
-  if (localStorage.getItem('isMusicPlaying')) toggleMusic();
+  const track = new Audio(audioObj.bgMusic);
+  track.onloadeddata = () => {
+    if (localStorage.getItem('isMusicPlaying')) {
+      bgAudio.src = track.src;
+      toggleMusic();
+    }
+  };
+  window.removeEventListener('mousedown', restorePlayingMusic);
 };
 
+window.addEventListener('mousedown', restorePlayingMusic);
+
 window.addEventListener('beforeunload', saveSettings);
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('load', () => {
   restoreSettings();
-  setTimeout(restorePlayingMusic, 200);
 });
 
 //! -----getGallery

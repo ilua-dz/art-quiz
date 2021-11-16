@@ -177,6 +177,7 @@ a {
   width: 20vmax;
   font-size: 1vmax;
   text-align: left;
+  color: var(--text-color);
   text-transform: uppercase;
 }
 
@@ -217,11 +218,13 @@ a {
 }
 
 .controls-item i {
+  color: var(--text-color);
   font-size: 3vmax;
 }
 
 .controls-descr {
   text-transform: uppercase;
+  color: var(--text-color);
   font-size: 1vmax;
 }
 

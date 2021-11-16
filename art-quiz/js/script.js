@@ -174,6 +174,16 @@ window.addEventListener('load', () => {
   restoreSettings();
 });
 
+window.addEventListener('keyup', (e) => {
+  playSound('click');
+  switch (e.code) {
+    case 'KeyQ': smoothChange(startModule); break;
+    case 'KeyM': toggleMusic(); break;
+    case 'KeyS': toggleVolume(); break;
+    default: break;
+  }
+});
+
 //! -----getGallery
 
 // async function getGallery() {

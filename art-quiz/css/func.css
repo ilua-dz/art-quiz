@@ -1,0 +1,11 @@
+.opacity-off {
+  opacity: 0;
+}
+
+.display-off {
+  display: none !important;
+}
+
+.display-on {
+  display: block;
+}

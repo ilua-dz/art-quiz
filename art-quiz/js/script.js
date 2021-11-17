@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 //! ------------settings
 
 let isTimerOn;
@@ -10,9 +9,18 @@ let isMusicPlaying;
 const settingsBtn = document.querySelector('.settings-btn');
 const controlsBtn = document.querySelector('.controls-btn');
 const backBtns = document.querySelectorAll('.back-btn');
+
 const settingsModule = document.querySelector('.settings-module');
 const startModule = document.querySelector('.start-module');
 const controlsModule = document.querySelector('.controls-module');
+const categoriesModule = document.querySelector('.categories-module');
+
+const header = document.querySelector('.header');
+const miniHeader = document.querySelector('.mini-header');
+const footer = document.querySelector('.footer');
+const fullFooterContent = footer.innerHTML;
+const footerNodes = footer.childNodes;
+const quizMenu = document.querySelector('.quiz-type-menu');
 
 const volumeToggleBtn = document.querySelector('.volume-toggle');
 const volumeInput = document.querySelector('.settings-volume-range');
@@ -23,22 +31,39 @@ const timerInput = document.querySelector('.settings-timer-range');
 const allButtons = document.querySelectorAll('._btn');
 const allInputsTypeRange = document.querySelectorAll('input');
 
-const allModules = [startModule, settingsModule, controlsModule];
+const staticModules = [startModule, settingsModule, controlsModule, categoriesModule];
 
-const smoothChange = (menu) => {
-  allModules.forEach((module) => { module.style.opacity = '0'; });
+const toggleClasses = (node, classes, dir = undefined) => {
+  classes.forEach((cssClass) => node.classList.toggle(cssClass, dir));
+};
+
+const toggleClassOfNodes = (cssClass, nodes, dir = undefined) => {
+  nodes.forEach((node) => node.classList.toggle(cssClass, dir));
+};
+
+const offClass = 'display-off';
+const onClass = 'display-on';
+const hideClass = 'opacity-off';
+
+const smoothChangeModule = (onModule, ...allModules) => {
+  [...allModules, footer].forEach((module) => module.classList.add(hideClass));
   setTimeout(() => {
-    allModules.forEach((module) => { module.style.display = 'none'; });
-    menu.style.display = 'block';
+    allModules.forEach((module) => {
+      toggleClasses(module, [onClass, offClass], false);
+      footer.classList.toggle(offClass);
+      if (module !== onModule) module.classList.toggle(offClass);
+      else module.classList.toggle(onClass);
+    });
   }, 300);
   setTimeout(() => {
-    allModules.forEach((module) => { module.style.opacity = '1'; });
+    [...allModules, footer].forEach((module) => module.classList.remove(hideClass));
   }, 400);
 };
-controlsBtn.addEventListener('click', () => smoothChange(controlsModule));
-settingsBtn.addEventListener('click', () => smoothChange(settingsModule));
+
+controlsBtn.addEventListener('click', () => smoothChangeModule(controlsModule, ...staticModules));
+settingsBtn.addEventListener('click', () => smoothChangeModule(settingsModule, ...staticModules));
 backBtns.forEach((btn) => {
-  btn.addEventListener('click', () => smoothChange(startModule));
+  btn.addEventListener('click', () => smoothChangeModule(startModule, ...staticModules));
 });
 
 const audioObj = {
@@ -66,8 +91,7 @@ allInputsTypeRange.forEach((input) => {
 });
 
 const toggleVolume = () => {
-  volumeToggleBtn.classList.toggle('fa-volume-slash');
-  volumeToggleBtn.classList.toggle('fa-volume');
+  toggleClasses(volumeToggleBtn, ['fa-volume-slash', 'fa-volume']);
   isVolumeMute = !isVolumeMute;
   volumeInput.value = isVolumeMute ? 0 : soundVolume * 100;
 };
@@ -75,9 +99,12 @@ const toggleVolume = () => {
 const changeVolume = () => {
   soundVolume = volumeInput.value / 100;
   audio.volume = soundVolume;
-  volumeToggleBtn.className = soundVolume
-    ? 'fa-thin fa-volume decorate-button fa-sizing volume-toggle _btn'
-    : 'fa-thin fa-volume-slash decorate-button fa-sizing volume-toggle _btn';
+  if (!soundVolume) {
+    toggleClasses(volumeToggleBtn, ['fa-volume', 'fa-volume-slash']);
+  }
+  // volumeToggleBtn.className = soundVolume
+  //   ? 'fa-thin fa-volume decorate-button fa-sizing volume-toggle _btn'
+  //   : 'fa-thin fa-volume-slash decorate-button fa-sizing volume-toggle _btn';
   if (soundVolume) isVolumeMute = false;
 };
 changeVolume();
@@ -177,7 +204,11 @@ window.addEventListener('load', () => {
 window.addEventListener('keyup', (e) => {
   playSound('click');
   switch (e.code) {
-    case 'KeyQ': smoothChange(startModule); break;
+    case 'Digit1' || 'Numpad1':
+      break;
+    case 'KeyQ':
+      smoothChangeModule(startModule, ...staticModules);
+      break;
     case 'KeyM': toggleMusic(); break;
     case 'KeyS': toggleVolume(); break;
     default: break;
@@ -186,18 +217,84 @@ window.addEventListener('keyup', (e) => {
 
 //! -----getGallery
 
-// async function getGallery() {
-//   const res = await fetch('./assets/gallery/gallery_data.json');
-//   const data = await res.json();
-//   const category = [];
-//   for (let i = 0; i < data.length; i += 1) {
-//     const item = data[i].category;
-//     if (!category.some((el) => el === item)) category.push(item);
-//   }
-//   console.log(category);
-//   category.forEach((cat) => {
-//     console.log(data.filter((item) => item.category === cat));
-//   });
-// }
+let galleryArr;
+const categoriesArr = [];
 
-// getGallery();
+const getGallery = async () => {
+  const res = await fetch('./assets/gallery/gallery_data.json');
+  const data = await res.json();
+  galleryArr = data;
+  for (let i = 0; i < data.length; i += 1) {
+    const item = data[i].category;
+    if (!categoriesArr.some((el) => el === item)) categoriesArr.push(item);
+  }
+  console.log('Promise fullfilled!');
+};
+
+//! -----categories
+
+const randomImage = (categoryNumber) => {
+  const category = categoriesArr[categoryNumber];
+  const categoryPics = galleryArr.filter((item) => item.category === category);
+  const image = categoryPics[Math.floor(Math.random() * categoryPics.length)];
+  return image;
+};
+
+class CategoryCard {
+  constructor(categoryNumber) {
+    const picture = randomImage(categoryNumber);
+    this.category = picture.category;
+    this.imageLink = `./assets/gallery/img/${picture.imageNum}.avif`;
+    this.img = document.createElement('img');
+    this.img.src = this.imageLink;
+  }
+}
+
+const categoriesContainer = document.querySelector('.categories-container');
+
+
+
+//! ------mini header and footer
+
+let inGame = false;
+
+const toggleFooter = () => {
+  if (!inGame) {
+    footer.style.padding = '0 2vw 0 2vw';
+    footerNodes[1].textContent = 'ILYA DZYUIN';
+    footerNodes[1].className = '_btn decorate-button';
+    footerNodes[3].textContent = '2021';
+    footerNodes[5].style.height = '2.3vh';
+    footerNodes[5].childNodes[1].style.height = '2vh';
+    toggleClassOfNodes(offClass, [header, miniHeader]);
+  } else {
+    footer.innerHTML = fullFooterContent;
+    footer.style = '';
+    toggleClassOfNodes(offClass, [header, miniHeader]);
+  }
+  inGame = !inGame;
+};
+
+quizMenu.childNodes.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    categoriesContainer.innerHTML = '';
+    getGallery().then(() => {
+      for (let i = 0; i < categoriesArr.length; i += 1) {
+        const card = new CategoryCard(i);
+        const categoryEl = document.createElement('div');
+        categoryEl.addEventListener('click', () => playSound('click'));
+        categoryEl.className = 'category-card quiz-type-btn';
+        categoryEl.style.backgroundImage = `url('${card.imageLink}')`;
+        const categoryTitle = document.createElement('h4');
+        categoryTitle.className = 'category-title';
+        categoryTitle.textContent = card.category;
+        categoryEl.append(categoryTitle);
+        categoriesContainer.append(categoryEl);
+      }
+    });
+    // toggleFooter();
+    smoothChangeModule(categoriesModule, ...staticModules);
+  });
+});
+
+//! ----------------------------

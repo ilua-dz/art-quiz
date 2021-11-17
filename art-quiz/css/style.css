@@ -1,6 +1,7 @@
 @import url("https://pro.fontawesome.com/releases/v6.0.0-beta2/css/all.css");
 @import url("https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css");
 
+@import url("./func.css");
 @import url("./input_range.css");
 
 @font-face {
@@ -30,6 +31,20 @@ ul {
   list-style: none;
 }
 
+h1 {
+  font-size: 2vmax;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+h1 > span:first-child {
+  color: var(--text-color);
+}
+
+h1 > span:last-child {
+  color: var(--hover-color);
+}
+
 h2 {
   margin: 1vmin 0 3vmin 0;
   text-align: center;
@@ -42,6 +57,16 @@ h2 {
 h3 {
   margin: 2vmin 0 2vmin 0;
   font-size: 2vmax;
+}
+
+h4 {
+  margin: 0;
+  width: 200px;
+  padding: 0.5vmin;
+  text-transform: uppercase;
+  font-size: 1vmax;
+  text-align: center;
+  opacity: 0.8;
 }
 
 a {
@@ -67,14 +92,17 @@ a {
 
 .wrapper {
   margin-top: 2vh;
-  width: 50vmax;
+  width: 50vw;
   display: flex;
   flex-direction: column;
   row-gap: 2vh;
 }
 
-.logo {
+.mini-header {
   text-align: center;
+}
+
+.header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -82,8 +110,8 @@ a {
   margin: 0 0.5vmax 0 0.5vmax;
 }
 
-.logo img {
-  width: 28%;
+.header img {
+  width: 20%;
 }
 
 .quiz-type-menu {
@@ -93,7 +121,7 @@ a {
   align-items: center;
 }
 
-.quiz-type-btn {
+.quiz-type-general {
   font-size: 1vmax;
   color: var(--text-color);
   font-weight: 200;
@@ -101,6 +129,9 @@ a {
   width: 30vmax;
   text-transform: uppercase;
   text-align: center;
+}
+
+.quiz-type-btn {
   transition: transform 0.2s ease-in-out, color 0.2s;
   cursor: pointer;
 }
@@ -110,14 +141,14 @@ a {
   color: #ef9d10;
 }
 
+.quiz-type-btn:active {
+  transform: rotateZ(-1deg);
+}
+
 .quiz-type-btn img {
   width: 100%;
   border-radius: 1vmax;
   transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.quiz-type-btn:active {
-  transform: rotateZ(-1deg);
 }
 
 .footer {
@@ -127,6 +158,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  align-content: center;
   font-size: 1vmax;
   color: var(--text-color);
   border-radius: 2.5vmin;
@@ -135,8 +167,6 @@ a {
 }
 
 .footer span {
-  position: absolute;
-  left: calc(50% - 4vmax);
   text-align: center;
   text-transform: uppercase;
 }
@@ -181,20 +211,13 @@ a {
   text-transform: uppercase;
 }
 
-/* .settings-back {
-  margin-top: auto;
-  margin-bottom: auto;
-} */
-
-.settings-module,
-.controls-module {
-  display: none;
-}
-
 .settings-module,
 .start-module,
-.controls-module {
-  height: 65vh;
+.controls-module,
+.categories-module,
+.footer,
+.header {
+  /* height: 65vh; */
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -228,38 +251,64 @@ a {
   font-size: 1vmax;
 }
 
+.categories-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1vmin;
+}
+
+.category-card {
+  position: relative;
+  overflow: hidden;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 200px;
+  height: 200px;
+  border-radius: 2vmin;
+}
+
+.category-title {
+  position: absolute;
+  cursor: default;
+  bottom: 0;
+  background-color: var(--text-color);
+  color: var(--hover-color);
+}
+
 @media (max-width: 1440px) {
   .wrapper {
-    width: 70vmax;
+    width: 70vw;
   }
-  .quiz-type-btn {
+  .quiz-type-general {
     width: 32vmax;
   }
 }
 
 @media (max-width: 1023px) {
   .wrapper {
-    width: 80vmax;
+    width: 80vw;
   }
-  .quiz-type-btn {
+  .quiz-type-general {
     width: 40vmax;
   }
 }
 
 @media (max-width: 768px) {
-  .quiz-type-btn {
+  .quiz-type-general {
     width: 33vmax;
   }
-  .wrapper {
+  /* .wrapper {
     width: 40vmax;
-  }
+  } */
   .quiz-type-menu {
     flex-direction: column;
   }
-  .settings-module,
+  /* .settings-module,
   .start-module {
     height: 81vh;
-  }
+  } */
   .controls-item {
     width: 36vmax;
   }

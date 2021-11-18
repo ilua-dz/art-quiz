@@ -6,6 +6,8 @@ let isVolumeMute;
 let soundVolume;
 let isMusicPlaying;
 
+let quizType;
+
 const settingsBtn = document.querySelector('.settings-btn');
 const controlsBtn = document.querySelector('.controls-btn');
 const backBtns = document.querySelectorAll('.back-btn');
@@ -13,7 +15,14 @@ const backBtns = document.querySelectorAll('.back-btn');
 const settingsModule = document.querySelector('.settings-module');
 const startModule = document.querySelector('.start-module');
 const controlsModule = document.querySelector('.controls-module');
+
 const categoriesModule = document.querySelector('.categories-module');
+const quizTypeString = document.querySelector('.quiz-type-string');
+const categoriesContainer = document.querySelector('.categories-container');
+let levelCards;
+
+const artistQuizModule = document.querySelector('.artist-quiz-module');
+const picQuizModule = document.querySelector('.pic-quiz-module');
 
 const header = document.querySelector('.header');
 const miniHeader = document.querySelector('.mini-header');
@@ -29,7 +38,20 @@ const timerInput = document.querySelector('.settings-timer-range');
 const allButtons = document.querySelectorAll('._btn');
 const allInputsTypeRange = document.querySelectorAll('input');
 
-const staticModules = [startModule, settingsModule, controlsModule, categoriesModule];
+const staticModules = [
+  startModule,
+  settingsModule,
+  controlsModule,
+  categoriesModule,
+  artistQuizModule,
+  picQuizModule,
+  footer,
+];
+
+const gameModules = [
+  artistQuizModule,
+  picQuizModule,
+];
 
 const toggleClasses = (node, classes, dir = undefined) => {
   classes.forEach((cssClass) => node.classList.toggle(cssClass, dir));
@@ -43,18 +65,31 @@ const offClass = 'display-off';
 const onClass = 'display-on';
 const hideClass = 'opacity-off';
 
+const toggleHeader = (size) => {
+  if (!size) {
+    header.classList.add(offClass);
+    miniHeader.classList.remove(offClass);
+  } else {
+    header.classList.remove(offClass);
+    miniHeader.classList.add(offClass);
+  }
+};
+
 const smoothChangeModule = (onModule, ...allModules) => {
-  [...allModules, footer].forEach((module) => module.classList.add(hideClass));
+  if (gameModules.includes(onModule)) allModules.push(header, miniHeader);
+  toggleClassOfNodes(hideClass, allModules, true);
   setTimeout(() => {
     allModules.forEach((module) => {
       toggleClasses(module, [onClass, offClass], false);
-      footer.classList.toggle(offClass);
       if (module !== onModule) module.classList.toggle(offClass);
       else module.classList.toggle(onClass);
     });
+    footer.classList.toggle(offClass);
+    if (gameModules.includes(onModule)) toggleHeader();
+    else toggleHeader(1);
   }, 300);
   setTimeout(() => {
-    [...allModules, footer].forEach((module) => module.classList.remove(hideClass));
+    toggleClassOfNodes(hideClass, allModules, false);
   }, 400);
 };
 
@@ -218,23 +253,23 @@ window.addEventListener('keyup', (e) => {
 let galleryArr;
 
 const getGallery = async () => {
-  const res = await fetch('./assets/gallery/gallery_data.json');
+  const res = await fetch('./assets/gallery/gallery_data_en.json');
   const data = await res.json();
   galleryArr = data;
 };
 
-//! -----categories
+//! -----classes-------------
 
-const randomImage = (levelNumber, quizType) => {
-  const levelStartNumber = levelNumber * 10 - 10 + quizType * 120;
-  const levelPics = galleryArr.slice(levelStartNumber, levelStartNumber + 10);
+const randomImage = (levelNumber, _quizType) => {
+  const levelImgStartNumber = levelNumber * 10 - 10 + _quizType * 120;
+  const levelPics = galleryArr.slice(levelImgStartNumber, levelImgStartNumber + 10);
   const image = levelPics[Math.floor(Math.random() * levelPics.length)];
   return image;
 };
 
 class CategoryCard {
-  constructor(levelNumber, quizType) {
-    const picture = randomImage(levelNumber, quizType);
+  constructor(levelNumber, _quizType) {
+    const picture = randomImage(levelNumber, _quizType);
     this.levelNumber = levelNumber;
     this.imageLink = `./assets/gallery/img/${picture.imageNum}.avif`;
   }
@@ -252,32 +287,38 @@ class CategoryCard {
   }
 }
 
-const categoriesContainer = document.querySelector('.categories-container');
+//! ------------------------------
 
-//! ------mini header and footer
-
-let inGame = false;
-
-const toggleHeader = () => {
-  if (!inGame) {
-    toggleClassOfNodes(offClass, [header, miniHeader]);
-  } else {
-    toggleClassOfNodes(offClass, [header, miniHeader]);
+const levelCardClickListener = () => {
+  switch (quizType) {
+    case 0:
+      smoothChangeModule(artistQuizModule, ...staticModules);
+      break;
+    case 1:
+      smoothChangeModule(picQuizModule, ...staticModules);
+      break;
+    default: break;
   }
-  inGame = !inGame;
 };
 
-quizMenu.forEach((btn, quizType) => {
+const quizTypeNames = ['Artist quiz', 'Picture quiz'];
+
+quizMenu.forEach((btn, _quizType) => {
   btn.addEventListener('click', () => {
+    quizType = _quizType;
+    quizTypeString.textContent = quizTypeNames[quizType];
     categoriesContainer.innerHTML = '';
     getGallery().then(() => {
       for (let i = 1; i <= 12; i += 1) {
         const card = new CategoryCard(i, quizType);
         categoriesContainer.append(card.create());
       }
+      smoothChangeModule(categoriesModule, ...staticModules);
+      levelCards = document.querySelectorAll('.category-card');
+      levelCards.forEach((card) => {
+        card.addEventListener('click', levelCardClickListener);
+      });
     });
-    // toggleHeader();
-    smoothChangeModule(categoriesModule, ...staticModules);
   });
 });
 

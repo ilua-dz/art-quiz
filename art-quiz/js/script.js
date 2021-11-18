@@ -18,9 +18,7 @@ const categoriesModule = document.querySelector('.categories-module');
 const header = document.querySelector('.header');
 const miniHeader = document.querySelector('.mini-header');
 const footer = document.querySelector('.footer');
-const fullFooterContent = footer.innerHTML;
-const footerNodes = footer.childNodes;
-const quizMenu = document.querySelector('.quiz-type-menu');
+const quizMenu = document.querySelectorAll('.quiz-type-general');
 
 const volumeToggleBtn = document.querySelector('.volume-toggle');
 const volumeInput = document.querySelector('.settings-volume-range');
@@ -218,81 +216,67 @@ window.addEventListener('keyup', (e) => {
 //! -----getGallery
 
 let galleryArr;
-const categoriesArr = [];
 
 const getGallery = async () => {
   const res = await fetch('./assets/gallery/gallery_data.json');
   const data = await res.json();
   galleryArr = data;
-  for (let i = 0; i < data.length; i += 1) {
-    const item = data[i].category;
-    if (!categoriesArr.some((el) => el === item)) categoriesArr.push(item);
-  }
-  console.log('Promise fullfilled!');
 };
 
 //! -----categories
 
-const randomImage = (categoryNumber) => {
-  const category = categoriesArr[categoryNumber];
-  const categoryPics = galleryArr.filter((item) => item.category === category);
-  const image = categoryPics[Math.floor(Math.random() * categoryPics.length)];
+const randomImage = (levelNumber, quizType) => {
+  const levelStartNumber = levelNumber * 10 - 10 + quizType * 120;
+  const levelPics = galleryArr.slice(levelStartNumber, levelStartNumber + 10);
+  const image = levelPics[Math.floor(Math.random() * levelPics.length)];
   return image;
 };
 
 class CategoryCard {
-  constructor(categoryNumber) {
-    const picture = randomImage(categoryNumber);
-    this.category = picture.category;
+  constructor(levelNumber, quizType) {
+    const picture = randomImage(levelNumber, quizType);
+    this.levelNumber = levelNumber;
     this.imageLink = `./assets/gallery/img/${picture.imageNum}.avif`;
-    this.img = document.createElement('img');
-    this.img.src = this.imageLink;
+  }
+
+  create() {
+    const card = document.createElement('div');
+    const cardTitle = document.createElement('div');
+    card.addEventListener('click', () => playSound('click'));
+    card.style.backgroundImage = `url("${this.imageLink}")`;
+    card.className = 'category-card quiz-type-btn';
+    cardTitle.className = 'category-title';
+    cardTitle.innerHTML = `<i class="fa-regular">${this.levelNumber}</i>`;
+    card.append(cardTitle);
+    return card;
   }
 }
 
 const categoriesContainer = document.querySelector('.categories-container');
 
-
-
 //! ------mini header and footer
 
 let inGame = false;
 
-const toggleFooter = () => {
+const toggleHeader = () => {
   if (!inGame) {
-    footer.style.padding = '0 2vw 0 2vw';
-    footerNodes[1].textContent = 'ILYA DZYUIN';
-    footerNodes[1].className = '_btn decorate-button';
-    footerNodes[3].textContent = '2021';
-    footerNodes[5].style.height = '2.3vh';
-    footerNodes[5].childNodes[1].style.height = '2vh';
     toggleClassOfNodes(offClass, [header, miniHeader]);
   } else {
-    footer.innerHTML = fullFooterContent;
-    footer.style = '';
     toggleClassOfNodes(offClass, [header, miniHeader]);
   }
   inGame = !inGame;
 };
 
-quizMenu.childNodes.forEach((btn) => {
+quizMenu.forEach((btn, quizType) => {
   btn.addEventListener('click', () => {
     categoriesContainer.innerHTML = '';
     getGallery().then(() => {
-      for (let i = 0; i < categoriesArr.length; i += 1) {
-        const card = new CategoryCard(i);
-        const categoryEl = document.createElement('div');
-        categoryEl.addEventListener('click', () => playSound('click'));
-        categoryEl.className = 'category-card quiz-type-btn';
-        categoryEl.style.backgroundImage = `url('${card.imageLink}')`;
-        const categoryTitle = document.createElement('h4');
-        categoryTitle.className = 'category-title';
-        categoryTitle.textContent = card.category;
-        categoryEl.append(categoryTitle);
-        categoriesContainer.append(categoryEl);
+      for (let i = 1; i <= 12; i += 1) {
+        const card = new CategoryCard(i, quizType);
+        categoriesContainer.append(card.create());
       }
     });
-    // toggleFooter();
+    // toggleHeader();
     smoothChangeModule(categoriesModule, ...staticModules);
   });
 });

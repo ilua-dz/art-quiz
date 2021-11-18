@@ -11,12 +11,15 @@
 
 :root {
   --text-color: #4a536b;
+  --text-color2: #745c3d;
   --hover-color: #ef9d10;
+  --bg-color: #fff1e1;
+  --bg-color2: #201e20;
 }
 
 body {
   margin: 0;
-  background-color: #fff1e1;
+  background-color: var(--bg-color);
   display: flex;
   justify-content: center;
   min-width: 320px;
@@ -50,7 +53,7 @@ h2 {
   text-align: center;
   font-size: 1vmax;
   letter-spacing: 0.5vmax;
-  color: #745c3d;
+  color: var(--text-color2);
   text-transform: uppercase;
 }
 
@@ -59,7 +62,7 @@ h3 {
   font-size: 2vmax;
 }
 
-h4 {
+/* h4 {
   margin: 0;
   width: 200px;
   padding: 0.5vmin;
@@ -67,7 +70,7 @@ h4 {
   font-size: 1vmax;
   text-align: center;
   opacity: 0.8;
-}
+} */
 
 a {
   text-decoration: none;
@@ -82,7 +85,7 @@ a {
 }
 
 .decorate-button:hover {
-  color: #ef9d10;
+  color: var(--hover-color);
   transform: scale(1.1, 1.1);
 }
 
@@ -91,11 +94,12 @@ a {
 }
 
 .wrapper {
+  position: relative;
   margin-top: 2vh;
   width: 50vw;
   display: flex;
   flex-direction: column;
-  row-gap: 2vh;
+  /* row-gap: 0vh; */
 }
 
 .mini-header {
@@ -107,7 +111,7 @@ a {
   justify-content: space-between;
   align-items: flex-start;
   color: var(--text-color);
-  margin: 0 0.5vmax 0 0.5vmax;
+  margin: 0 0.5vmax 2vmin 0.5vmax;
 }
 
 .header img {
@@ -138,7 +142,7 @@ a {
 
 .quiz-type-btn:hover {
   transform: rotateZ(1deg) scale(1.01, 1.01);
-  color: #ef9d10;
+  color: var(--hover-color);
 }
 
 .quiz-type-btn:active {
@@ -153,8 +157,8 @@ a {
 
 .footer {
   position: relative;
-  padding: 0.5vmax 2vmax 0.5vmax 2vmax;
-  margin: 0 0.5vmax 0 0.5vmax;
+  padding: 0.2vmax 1vmax 0.2vmax 1vmax;
+  margin: 1vmin 0.5vmax 0 0.5vmax;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -167,6 +171,8 @@ a {
 }
 
 .footer span {
+  font-size: 0.7vmax;
+  line-height: 0.7vmax;
   text-align: center;
   text-transform: uppercase;
 }
@@ -178,8 +184,16 @@ a {
   text-align: center;
 }
 
+.fa-github {
+  font-size: 2vmax;
+}
+
 .rss-footer-link {
-  height: 2.5vmax;
+  height: 2vmax;
+}
+
+.rss-footer-link img {
+  height: 100%;
 }
 
 .rss-footer-link:hover {
@@ -217,6 +231,9 @@ a {
 .categories-module,
 .footer,
 .header {
+  position: relative;
+  margin-left: 0.5vmax;
+  margin-right: 0.5vmax;
   /* height: 65vh; */
   transition: opacity 0.3s ease-in-out;
 }
@@ -263,18 +280,86 @@ a {
   overflow: hidden;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: contain;
-  width: 200px;
-  height: 200px;
-  border-radius: 2vmin;
+  background-size: cover;
+  width: 10vmax;
+  height: 10vmax;
+  border-radius: 10%;
 }
 
 .category-title {
   position: absolute;
+  width: 20%;
+  height: 20%;
+  text-align: center;
+  font-size: 1.1vmax;
+  line-height: 2vmax;
   cursor: default;
   bottom: 0;
-  background-color: var(--text-color);
+  border-radius: 50%;
+  border: 1px solid var(--bg-color);
+  background-color: var(--bg-color2);
   color: var(--hover-color);
+}
+
+.categories-module .back-btn {
+  position: absolute;
+  bottom: 96%;
+}
+
+.artist-quiz-module {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.artist-quiz-module h2 {
+  font-size: 2vmin;
+  margin-bottom: 0;
+}
+
+.artist-quiz-subj {
+  display: block;
+  /* object-fit: cover; */
+  /* height: 65vh; */
+  border-radius: 2.5vmin;
+  width: 90%;
+}
+
+.artist-quiz-answers-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 1vmin;
+}
+
+.artist-quiz-answer {
+  height: 4vmin;
+  width: 40%;
+  text-transform: uppercase;
+  font-size: 2vmin;
+  line-height: 3.5vmin;
+  border: solid;
+  border-radius: 2vh;
+  text-align: center;
+}
+
+.pic-quiz-module {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1vmin;
+  justify-content: center;
+}
+
+.pic-quiz-module h2 {
+  margin: 0;
+  width: 100%;
+  height: unset;
+}
+
+.picture-quiz-pic {
+  display: block;
+  width: 47%;
+  border-radius: 1.5vmin;
 }
 
 @media (max-width: 1440px) {

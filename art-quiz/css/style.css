@@ -96,10 +96,12 @@ a {
 
 .wrapper {
   position: relative;
-  margin-top: 2vh;
+  margin-top: 0.5vh;
   width: 50vw;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   /* row-gap: 0vh; */
 }
 
@@ -108,6 +110,7 @@ a {
 }
 
 .header {
+  width: 95vw;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -116,7 +119,7 @@ a {
 }
 
 .header img {
-  width: 20%;
+  width: 10vw;
 }
 
 .quiz-type-menu {
@@ -158,22 +161,21 @@ a {
 
 .footer {
   position: relative;
+  width: 95vw;
   padding: 0.2vmax 1vmax 0.2vmax 1vmax;
   margin: 1vmin 0.5vmax 0 0.5vmax;
   display: flex;
   justify-content: space-between;
   align-items: center;
   align-content: center;
-  font-size: 1vmax;
+  font-size: 0.7vmax;
   color: var(--text-color);
   border-radius: 2.5vmin;
-  border-top: 2px dotted;
-  border-bottom: 2px dotted;
+  border-top: 0.1vmin dotted;
+  border-bottom: 0.1vmin dotted;
 }
 
 .footer span {
-  font-size: 0.7vmax;
-  line-height: 0.7vmax;
   text-align: center;
   text-transform: uppercase;
 }
@@ -261,7 +263,7 @@ a {
   justify-content: center;
 }
 
-.controls-item i {
+.controls-item {
   color: var(--text-color);
   font-size: 3vmax;
 }
@@ -272,7 +274,14 @@ a {
   font-size: 1vmax;
 }
 
+.categories-module {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .categories-container {
+  margin-bottom: 1vh;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -294,20 +303,16 @@ a {
   position: absolute;
   width: 20%;
   height: 20%;
-  text-align: center;
-  font-size: 1.1vmax;
-  line-height: 2vmax;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* font-size: 0.7rem; */
   cursor: default;
   bottom: 0;
   border-radius: 50%;
   border: 1px solid var(--bg-color);
   background-color: var(--bg-color2);
   color: var(--hover-color);
-}
-
-.categories-module .back-btn {
-  position: absolute;
-  bottom: 96%;
 }
 
 .artist-quiz-module {
@@ -317,8 +322,7 @@ a {
 }
 
 .artist-quiz-module h2 {
-  font-size: 2vmin;
-  margin-bottom: 0;
+  margin: 2vmin 0 0 0;
 }
 
 .artist-quiz-subj {
@@ -337,12 +341,13 @@ a {
 }
 
 .artist-quiz-answer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 4vmin;
-  width: 40%;
+  width: 47%;
   text-transform: uppercase;
-  font-size: 2vmin;
-  line-height: 3.5vmin;
-  border: solid;
+  border: 0.3vmin solid;
   border-radius: 2vh;
   text-align: center;
 }
@@ -400,5 +405,67 @@ a {
   } */
   .controls-item {
     width: 36vmax;
+  }
+}
+
+@media (orientation: portrait) {
+  h2 {
+    font-size: 1.5vmax;
+  }
+  .footer {
+    font-size: 1.4vmax;
+  }
+  .fa-sizing {
+    font-size: 4vmax;
+  }
+  .rss-footer-link {
+    height: 3vmax;
+  }
+  .header img {
+    width: 30vw;
+  }
+  .mini-header {
+    height: 5vw;
+    margin: 2vmin 0;
+  }
+  .mini-header h1 {
+    font-size: 5vw;
+  }
+  .setting-descr {
+    font-size: 1.4vmax;
+  }
+  .controls-descr {
+    font-size: 1.4vmax;
+  }
+  .category-card {
+    width: 17vmax;
+    height: 17vmax;
+  }
+  .artist-quiz-subj {
+    width: 94vw;
+  }
+  .artist-quiz-module h2 {
+    font-size: 2.5vmax;
+  }
+  .artist-quiz-answers-container {
+    gap: 3vmin;
+  }
+  .artist-quiz-answer {
+    width: 100%;
+    height: 6vmax;
+    border-radius: 3vmax;
+  }
+  .pic-quiz-module {
+    flex-direction: column;
+    align-items: center;
+  }
+  .pic-quiz-module h2 {
+    width: 90vw;
+    padding: 1vw;
+  }
+  .picture-quiz-pic {
+    width: 80vw;
+    height: 20.5vh;
+    object-fit: cover;
   }
 }

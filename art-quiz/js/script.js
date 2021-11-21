@@ -1,3 +1,6 @@
+import artistQuizQuestion from './artistQuizQuestion.js';
+import ArtistQuizQuestion from './artistQuizQuestion.js';
+
 //! ------------settings
 
 let isTimerOn;
@@ -27,7 +30,7 @@ const picQuizModule = document.querySelector('.pic-quiz-module');
 const header = document.querySelector('.header');
 const miniHeader = document.querySelector('.mini-header');
 const footer = document.querySelector('.footer');
-const quizMenu = document.querySelectorAll('.quiz-type-general');
+const quizTypeMenu = document.querySelectorAll('.quiz-type-general');
 
 const volumeToggleBtn = document.querySelector('.volume-toggle');
 const volumeInput = document.querySelector('.settings-volume-range');
@@ -260,16 +263,18 @@ const getGallery = async () => {
 
 //! -----classes-------------
 
-const randomImage = (levelNumber, _quizType) => {
+const randomPic = (gallery) => gallery[Math.floor(Math.random() * gallery.length)];
+
+const randomLevelPicture = (levelNumber, _quizType) => {
   const levelImgStartNumber = levelNumber * 10 - 10 + _quizType * 120;
   const levelPics = galleryArr.slice(levelImgStartNumber, levelImgStartNumber + 10);
   const image = levelPics[Math.floor(Math.random() * levelPics.length)];
   return image;
 };
 
-class CategoryCard {
+class LevelCard {
   constructor(levelNumber, _quizType) {
-    const picture = randomImage(levelNumber, _quizType);
+    const picture = randomLevelPicture(levelNumber, _quizType);
     this.levelNumber = levelNumber;
     this.imageLink = `./assets/gallery/img/${picture.imageNum}.avif`;
   }
@@ -289,34 +294,50 @@ class CategoryCard {
 
 //! ------------------------------
 
-const levelCardClickListener = () => {
+const defineAnswerButtons = (_question) => {
+  const answerButtons = document.querySelectorAll('.answer');
+  answerButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      _question.nextQuestion();
+      artistQuizModule.innerHTML = _question.create();
+      defineAnswerButtons(_question);
+    });
+  });
+};
+
+const levelStart = (levelNumber) => {
+  let quizModule;
+
   switch (quizType) {
-    case 0:
-      smoothChangeModule(artistQuizModule, ...staticModules);
-      break;
-    case 1:
-      smoothChangeModule(picQuizModule, ...staticModules);
-      break;
+    case 0: quizModule = artistQuizModule; break;
+    case 1: quizModule = picQuizModule; break;
     default: break;
   }
+  smoothChangeModule(quizModule, ...staticModules);
+
+  getGallery().then(() => {
+    const question = new ArtistQuizQuestion(quizType, levelNumber, galleryArr);
+    artistQuizModule.innerHTML = question.create();
+    defineAnswerButtons(question);
+  });
 };
 
 const quizTypeNames = ['Artist quiz', 'Picture quiz'];
 
-quizMenu.forEach((btn, _quizType) => {
-  btn.addEventListener('click', () => {
+quizTypeMenu.forEach((quizTypebtn, _quizType) => {
+  quizTypebtn.addEventListener('click', () => {
     quizType = _quizType;
     quizTypeString.textContent = quizTypeNames[quizType];
     categoriesContainer.innerHTML = '';
     getGallery().then(() => {
-      for (let i = 1; i <= 12; i += 1) {
-        const card = new CategoryCard(i, quizType);
+      for (let level = 1; level <= 12; level += 1) {
+        const card = new LevelCard(level, quizType);
         categoriesContainer.append(card.create());
       }
       smoothChangeModule(categoriesModule, ...staticModules);
       levelCards = document.querySelectorAll('.category-card');
-      levelCards.forEach((card) => {
-        card.addEventListener('click', levelCardClickListener);
+      levelCards.forEach((card, cardNumber) => {
+        card.addEventListener('click', () => levelStart(cardNumber));
       });
     });
   });

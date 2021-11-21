@@ -9,3 +9,11 @@
 .display-on {
   display: block;
 }
+
+.trueBg {
+  background-color: var(--true-color);
+}
+
+.falseBg {
+  background-color: var(--false-color);
+}

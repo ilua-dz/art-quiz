@@ -15,6 +15,8 @@
   --hover-color: #ef9d10;
   --bg-color: #fff1e1;
   --bg-color2: #201e20;
+  --true-color: chartreuse;
+  --false-color: red;
 }
 
 body {
@@ -52,7 +54,7 @@ h1 > span:last-child {
 h2 {
   margin: 1vmin 0 3vmin 0;
   text-align: center;
-  font-size: 1vmax;
+  font-size: 15px;
   letter-spacing: 0.5vmax;
   color: var(--text-color2);
   text-transform: uppercase;
@@ -338,10 +340,11 @@ a {
   /* height: 65vh; */
   border-radius: 2.5vmin;
   height: 70vh;
+  max-width: 95vw;
 }
 
 .artist-quiz-module ul {
-  width: 48vw;
+  width: 70vw;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -353,7 +356,7 @@ a {
   justify-content: center;
   align-items: center;
   height: 4vmin;
-  width: 23vw;
+  width: 30vw;
   text-transform: uppercase;
   border: 0.3vmin solid;
   border-radius: 2vh;
@@ -379,6 +382,60 @@ a {
   border-radius: 1.5vmin;
 }
 
+.popup-container {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 100vw;
+  height: 100vh;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.popup {
+  position: absolute;
+  padding: 2vmax;
+  margin: 0 3vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 2vmax;
+  background-color: white;
+}
+
+.answer-indicator {
+  width: 100%;
+  padding: 1vh;
+  border-radius: 1vmax;
+}
+
+.true-answer-popup img {
+  margin-top: 2vh;
+  /* width: 40vw; */
+  border-radius: 1vmax;
+  max-height: 60vh;
+  object-fit: cover;
+}
+
+.true-answer-popup h2 {
+  margin: 2vh 0 0 0;
+}
+
+.true-answer-popup h2:last-of-type {
+  margin-bottom: 2vh;
+}
+
+.next-btn {
+  width: 100%;
+  padding: 1vh;
+  border-radius: 1vmax;
+  color: #201e20;
+  background-blend-mode: screen;
+  background: linear-gradient(limegreen, transparent), linear-gradient(90deg, skyblue, transparent),
+    linear-gradient(-90deg, coral, transparent);
+}
+
 @media (max-width: 1440px) {
   .wrapper {
     width: 70vw;
@@ -401,16 +458,9 @@ a {
   .quiz-type-general {
     width: 33vmax;
   }
-  /* .wrapper {
-    width: 40vmax;
-  } */
   .quiz-type-menu {
     flex-direction: column;
   }
-  /* .settings-module,
-  .start-module {
-    height: 81vh;
-  } */
   .controls-item {
     width: 36vmax;
   }
@@ -457,6 +507,7 @@ a {
     height: 47vh;
     object-fit: cover;
   }
+
   .artist-quiz-module h2 {
     font-size: 2.5vmax;
   }
@@ -481,6 +532,9 @@ a {
     width: 80vw;
     height: 20.5vh;
     object-fit: cover;
+  }
+  .true-answer-popup img {
+    width: 85vw;
   }
 }
 

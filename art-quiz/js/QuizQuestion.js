@@ -30,6 +30,7 @@ export default class {
 
     let randomGallery = this.gallery.slice(this.quizType * 120, this.quizType * 120 + 120);
     randomGallery.splice(this.levelNumber * 10, 10);
+    randomGallery = randomGallery.filter((pic) => pic.author !== this.picObj().author);
 
     const falseAnswers = [];
     for (let i = 0; i < 3; i += 1) {

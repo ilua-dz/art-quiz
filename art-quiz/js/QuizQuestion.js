@@ -10,10 +10,10 @@ export default class {
       return gallery[picNumber];
     };
 
-    this.picElement = () => {
+    this.picElement = (picObj) => {
       const pic = document.createElement('img');
-      pic.src = `./assets/gallery/full/${this.picObj().imageNum}full.avif`
-      pic.alt = `${this.picObj().name}`;
+      pic.src = `./assets/gallery/full/${picObj.imageNum}full.avif`
+      pic.alt = `${picObj.name}`;
       return pic;
     };
   }
@@ -50,29 +50,50 @@ export default class {
     return { trueAnswerNumber, answers };
   }
 
-  getArtistQuizQuestion() {
-    const question = document.createElement('div');
-
-    const pic = this.picElement();
-
-    const title = document.createElement('h2');
-    title.textContent = 'Who is the author of the picture?';
-
-    const answersList = document.createElement('ul');
+  getQuestion() {
+    const node = document.createElement('div');
 
     const answerSet = this.getAnswers();
     this.trueAnswerNumber = answerSet.trueAnswerNumber;
 
-    answerSet.answers.forEach((answer) => {
+    const title = document.createElement('h2');
+
+    return { node, answerSet, title };
+  }
+
+  getArtistQuizQuestion() {
+    const question = this.getQuestion();
+
+    const pic = this.picElement(this.picObj());
+
+    question.title.textContent = 'Who is the author of the picture?';
+
+    const answersList = document.createElement('ul');
+
+    question.answerSet.answers.forEach((answer) => {
       const answerString = document.createElement('li');
-      answerString.classList.add('answer');
-      answerString.classList.add('_btn', 'decorate-button');
+      answerString.classList.add('artist-answer', '_btn', 'decorate-button');
       answerString.textContent = answer.author;
       answersList.append(answerString);
     });
 
-    question.append(pic, title, answersList);
-    return question.innerHTML;
+    question.node.append(pic, question.title, answersList);
+    return question.node.innerHTML;
+  }
+
+  getPictureQuizQuestion() {
+    const question = this.getQuestion();
+
+    question.title.textContent = `Choose a picture by ${this.picObj().author}`;
+
+    question.answerSet.answers.forEach((picObj, answerNumber) => {
+      const answerImg = this.picElement(picObj);
+      answerImg.classList.add('pic-answer', 'pic-btn', '_btn');
+      question.node.append(answerImg);
+      if (answerNumber === 1) question.node.append(question.title);
+    });
+
+    return question.node.innerHTML;
   }
 
   getTrueAnswerPopup(trueness) {
@@ -84,7 +105,7 @@ export default class {
       : ['fa-circle-xmark', 'falseBg'];
     answerIndicator.classList.add('fa-regular', 'fa-sizing', 'answer-indicator', ...answerClass);
 
-    const pic = this.picElement();
+    const pic = this.picElement(this.picObj());
 
     const description = document.createElement('div');
     description.innerHTML = `<h2>${this.picObj().name}</h2>

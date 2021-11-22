@@ -1,4 +1,4 @@
-import QuizQuestion from './artistQuizQuestion.js';
+import QuizQuestion from './QuizQuestion.js';
 import FinishLevelPopup from './finishLevelPopup.js';
 
 //! ------------settings
@@ -244,6 +244,7 @@ window.addEventListener('load', () => {
 
 window.addEventListener('keyup', (e) => {
   playSound('click');
+  console.log(e.code);
   switch (e.code) {
     case 'Digit1' || 'Numpad1':
       break;
@@ -268,8 +269,6 @@ const getGallery = async () => {
 
 //! -----classes-------------
 
-const randomPic = (gallery) => gallery[Math.floor(Math.random() * gallery.length)];
-
 const randomLevelPicture = (levelNumber, _quizType) => {
   const levelImgStartNumber = levelNumber * 10 - 10 + _quizType * 120;
   const levelPics = galleryArr.slice(levelImgStartNumber, levelImgStartNumber + 10);
@@ -284,12 +283,12 @@ class LevelCard {
     this.imageLink = `./assets/gallery/img/${picture.imageNum}.avif`;
   }
 
-  create() {
+  getCard() {
     const card = document.createElement('div');
     const cardTitle = document.createElement('div');
     card.addEventListener('click', () => playSound('click'));
     card.style.backgroundImage = `url("${this.imageLink}")`;
-    card.className = 'category-card quiz-type-btn';
+    card.className = 'category-card pic-btn';
     cardTitle.className = 'category-title';
     cardTitle.innerHTML = `<i class="fa-regular">${this.levelNumber}</i>`;
     card.append(cardTitle);
@@ -315,7 +314,7 @@ const goToLevels = () => {
   getGallery().then(() => {
     for (let level = 1; level <= 12; level += 1) {
       const card = new LevelCard(level, quizType);
-      categoriesContainer.append(card.create());
+      categoriesContainer.append(card.getCard());
     }
     smoothChangeModule(categoriesModule, ...staticModules);
     levelCards = document.querySelectorAll('.category-card');
@@ -325,38 +324,49 @@ const goToLevels = () => {
   });
 };
 
-const defineAnswerButtons = (_question) => {
-  const answerButtons = document.querySelectorAll('.answer');
+const answerChoise = (_question, inputAnswerNumber) => {
+  const trueness = _question.trueAnswerNumber === inputAnswerNumber;
+  trueAnswerPopup.innerHTML = _question.getTrueAnswerPopup(trueness);
 
-  answerButtons.forEach((btn, inputAnswerNumber) => {
+  if (trueness) trueAnswersCounter += 1;
+  togglePopup(trueAnswerPopupContainer, true);
+
+  const nextPicBtn = document.querySelector('.next-btn');
+  nextPicBtn.addEventListener('click', () => goToNextPic(_question));
+};
+
+const defineAnswerButtons = (_question, _quizType) => {
+  const btnsSet = !_quizType
+    ? document.querySelectorAll('.artist-answer')
+    : document.querySelectorAll('.pic-answer');
+  console.log(btnsSet)
+  btnsSet.forEach((btn, inputAnswerNumber) => {
     btn.addEventListener('click', () => {
-      const trueness = _question.trueAnswerNumber === inputAnswerNumber;
-      trueAnswerPopup.innerHTML = _question.getTrueAnswerPopup(trueness);
-
-      if (trueness) trueAnswersCounter += 1;
-      togglePopup(trueAnswerPopupContainer, true);
-
-      const nextPicBtn = document.querySelector('.next-btn');
-      nextPicBtn.addEventListener('click', () => {
-        answersCounter += 1;
-        if (answersCounter < 10) {
-          _question.nextQuestion();
-          artistQuizModule.innerHTML = _question.getArtistQuizQuestion();
-          defineAnswerButtons(_question);
-          togglePopup(trueAnswerPopupContainer, false);
-        } else {
-          const popup = new FinishLevelPopup(trueAnswersCounter);
-          finishLevelPopupContainer.append(popup.popup);
-          togglePopup(finishLevelPopupContainer, true);
-          popup.backBtn.addEventListener('click', () => {
-            togglePopup(trueAnswerPopupContainer, false);
-            togglePopup(finishLevelPopupContainer, false);
-            goToLevels();
-          });
-        }
-      });
+      answerChoise(_question, inputAnswerNumber);
     });
   });
+};
+
+const goToNextPic = (_question) => {
+  answersCounter += 1;
+  if (answersCounter < 10) {
+    _question.nextQuestion();
+
+    if (!quizType) artistQuizModule.innerHTML = _question.getArtistQuizQuestion();
+    else picQuizModule.innerHTML = _question.getPictureQuizQuestion();
+
+    defineAnswerButtons(_question, quizType);
+    togglePopup(trueAnswerPopupContainer, false);
+  } else {
+    const popup = new FinishLevelPopup(trueAnswersCounter);
+    finishLevelPopupContainer.append(popup.popup);
+    togglePopup(finishLevelPopupContainer, true);
+    popup.backBtn.addEventListener('click', () => {
+      togglePopup(trueAnswerPopupContainer, false);
+      togglePopup(finishLevelPopupContainer, false);
+      goToLevels();
+    });
+  }
 };
 
 const levelStart = (levelNumber) => {
@@ -372,8 +382,11 @@ const levelStart = (levelNumber) => {
 
   getGallery().then(() => {
     const question = new QuizQuestion(quizType, levelNumber, galleryArr);
-    artistQuizModule.innerHTML = question.getArtistQuizQuestion();
-    defineAnswerButtons(question);
+
+    if (!quizType) artistQuizModule.innerHTML = question.getArtistQuizQuestion();
+    else picQuizModule.innerHTML = question.getPictureQuizQuestion();
+
+    defineAnswerButtons(question, quizType);
   });
 };
 

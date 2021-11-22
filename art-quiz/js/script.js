@@ -1,6 +1,7 @@
 /* eslint-disable import/extensions */
 import QuizQuestion from './QuizQuestion.js';
 import FinishLevelPopup from './finishLevelPopup.js';
+import Scores from './scores.js';
 
 //! ------------settings
 
@@ -28,10 +29,13 @@ const quizTypeString = document.querySelector('.quiz-type-string');
 const categoriesContainer = document.querySelector('.categories-container');
 let levelCards;
 
+const scoresModule = document.querySelector('.scores-module');
+const scoresContainer = document.querySelector('.scores-container');
+
 const artistQuizModule = document.querySelector('.artist-quiz-module');
 const picQuizModule = document.querySelector('.pic-quiz-module');
-const trueAnswerPopup = document.querySelector('.true-answer-popup');
-const trueAnswerPopupContainer = document.querySelector('.true-answer-popup-container');
+const picInfoPopup = document.querySelector('.pic-info-popup');
+const picInfoPopupContainer = document.querySelector('.pic-info-popup-container');
 const finishLevelPopupContainer = document.querySelector('.level-finish-popup-container');
 
 const header = document.querySelector('.header');
@@ -57,6 +61,7 @@ const staticModules = [
   categoriesModule,
   artistQuizModule,
   picQuizModule,
+  scoresModule,
   footer,
 ];
 
@@ -303,7 +308,7 @@ class LevelCard {
       card.classList.add('level-passed');
       const levelIndicator = document.createElement('div');
       levelIndicator.addEventListener('click', (event) => {
-        console.log(this.levelNumber);
+        goToScores(this.levelNumber - 1);
         event.stopPropagation();
       });
       levelIndicator.classList.add('category-card-indicator');
@@ -357,9 +362,34 @@ const goToLevels = () => {
   });
 };
 
+const showPicInfo = (picNumber, _scores) => {
+  picInfoPopup.innerHTML = _scores.getInfoPopup(_scores.firstPicNumber + picNumber);
+  togglePopup(picInfoPopupContainer, true);
+  const backBtn = document.querySelector('.popup-close-btn');
+  backBtn.addEventListener('click', () => {
+    togglePopup(picInfoPopupContainer, false);
+  });
+};
+
+const goToScores = (levelNumber) => {
+  const scores = new Scores(quizType, levelNumber, galleryArr);
+  scoresContainer.innerHTML = scores.node.innerHTML;
+  smoothChangeModule(scoresModule, ...staticModules);
+  const picBtns = document.querySelectorAll('.scores-pic-btn');
+  picBtns.forEach((btn, number) => {
+    if (btn.classList.contains('resolved-pic')) {
+      btn.addEventListener('click', () => {
+        showPicInfo(number, scores);
+      });
+    }
+  });
+  const backToLevelsBtn = document.querySelector('.back-levels');
+  backToLevelsBtn.addEventListener('click', goToLevels);
+};
+
 const answerChoise = (_question, inputAnswerNumber) => {
   const trueness = _question.trueAnswerNumber === inputAnswerNumber;
-  trueAnswerPopup.innerHTML = _question.getTrueAnswerPopup(trueness);
+  picInfoPopup.innerHTML = _question.getTrueAnswerPopup(trueness);
 
   if (trueness) {
     playSound('trueAnswer');
@@ -367,7 +397,7 @@ const answerChoise = (_question, inputAnswerNumber) => {
   } else playSound('falseAnswer');
 
   levelResultString += trueness ? '1' : '0';
-  togglePopup(trueAnswerPopupContainer, true);
+  togglePopup(picInfoPopupContainer, true);
 
   const nextPicBtn = document.querySelector('.next-btn');
   nextPicBtn.addEventListener('click', () => goToNextPic(_question));
@@ -397,7 +427,7 @@ const goToNextPic = (_question) => {
     else picQuizModule.innerHTML = _question.getPictureQuizQuestion();
 
     defineAnswerButtons(_question, quizType);
-    togglePopup(trueAnswerPopupContainer, false);
+    togglePopup(picInfoPopupContainer, false);
   } else {
     playSound('endLevel');
     const popup = new FinishLevelPopup(trueAnswersCounter);
@@ -405,7 +435,7 @@ const goToNextPic = (_question) => {
     togglePopup(finishLevelPopupContainer, true);
     popup.backBtn.addEventListener('click', () => {
       saveResultToLS(_question, !levelResultString.includes('1'));
-      togglePopup(trueAnswerPopupContainer, false);
+      togglePopup(picInfoPopupContainer, false);
       togglePopup(finishLevelPopupContainer, false);
       goToLevels();
     });

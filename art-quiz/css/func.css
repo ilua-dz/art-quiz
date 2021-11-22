@@ -21,3 +21,11 @@
 .level-passed {
   filter: grayscale(0) !important;
 }
+
+.resolved-pic {
+  border: 2px solid var(--true-color);
+}
+
+.secret-pic {
+  border: 2px solid var(--false-color);
+}

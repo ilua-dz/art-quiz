@@ -241,6 +241,7 @@ a {
 .categories-module,
 .artist-quiz-module,
 .pic-quiz-module,
+.scores-module,
 .footer,
 .header,
 .mini-header {
@@ -450,7 +451,7 @@ a {
   border-radius: 1vmax;
 }
 
-.true-answer-popup img {
+.pic-info-popup img {
   margin-top: 2vh;
   /* width: 40vw; */
   border-radius: 1vmax;
@@ -458,11 +459,11 @@ a {
   object-fit: cover;
 }
 
-.true-answer-popup h2 {
+.pic-info-popup h2 {
   margin: 2vh 0 0 0;
 }
 
-.true-answer-popup h2:last-of-type {
+.pic-info-popup h2:last-of-type {
   margin-bottom: 2vh;
 }
 
@@ -474,6 +475,29 @@ a {
   background-blend-mode: screen;
   background: linear-gradient(limegreen, transparent), linear-gradient(90deg, skyblue, transparent),
     linear-gradient(-90deg, coral, transparent);
+}
+
+.scores-module {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scores-container {
+  margin-bottom: 1vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1vmin;
+}
+
+.scores-container img {
+  position: relative;
+  width: 20vh;
+  height: 20vh;
+  object-fit: cover;
+  border-radius: 10%;
+  filter: grayscale(1);
 }
 
 @media (max-width: 1440px) {
@@ -577,8 +601,12 @@ a {
   .pic-quiz-module .back-levels {
     top: -4vmax;
   }
-  .true-answer-popup img {
+  .pic-info-popup img {
     width: 85vw;
+  }
+  .scores-container img {
+    width: 17vmax;
+    height: 17vmax;
   }
 }
 

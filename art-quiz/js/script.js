@@ -10,6 +10,7 @@ let timerTime;
 let isVolumeMute;
 let soundVolume;
 let isMusicPlaying;
+let inGame = false;
 
 let quizType;
 let answersCounter;
@@ -113,6 +114,7 @@ const smoothChangeModule = (onModule, ...allModules) => {
 controlsBtn.addEventListener('click', () => smoothChangeModule(controlsModule, ...staticModules));
 settingsBtn.addEventListener('click', () => smoothChangeModule(settingsModule, ...staticModules));
 backBtns.forEach((btn) => {
+  inGame = false;
   btn.addEventListener('click', () => smoothChangeModule(startModule, ...staticModules));
 });
 
@@ -254,10 +256,7 @@ window.addEventListener('load', () => {
 
 window.addEventListener('keyup', (e) => {
   playSound('click');
-  console.log(e.code);
   switch (e.code) {
-    case 'Digit1' || 'Numpad1':
-      break;
     case 'KeyQ':
       smoothChangeModule(startModule, ...staticModules);
       break;
@@ -343,6 +342,7 @@ const togglePopup = (popup, dir) => {
 };
 
 const goToLevels = () => {
+  inGame = false;
   quizTypeString.textContent = quizTypeNames[quizType];
   categoriesContainer.innerHTML = '';
   getGallery().then(() => {
@@ -371,9 +371,12 @@ const showPicInfo = (picNumber, _scores) => {
   });
 };
 
+const scoresTitle = document.querySelector('.level-string');
+
 const goToScores = (levelNumber) => {
   const scores = new Scores(quizType, levelNumber, galleryArr);
   scoresContainer.innerHTML = scores.node.innerHTML;
+  scoresTitle.textContent = scores.titleString;
   smoothChangeModule(scoresModule, ...staticModules);
   const picBtns = document.querySelectorAll('.scores-pic-btn');
   picBtns.forEach((btn, number) => {
@@ -430,6 +433,7 @@ const goToNextPic = (_question) => {
     togglePopup(picInfoPopupContainer, false);
   } else {
     playSound('endLevel');
+    inGame = false;
     const popup = new FinishLevelPopup(trueAnswersCounter);
     finishLevelPopupContainer.append(popup.popup);
     togglePopup(finishLevelPopupContainer, true);
@@ -447,6 +451,7 @@ const levelStart = (levelNumber) => {
   levelResultString = '';
   answersCounter = 0;
   trueAnswersCounter = 0;
+  inGame = true;
   switch (quizType) {
     case 0: quizModule = artistQuizModule; break;
     case 1: quizModule = picQuizModule; break;

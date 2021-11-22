@@ -12,9 +12,14 @@ export default class {
       ? localStorage.getItem(levelResultKey)
       : false;
 
-    this.getPic = (picNum) => {
+    const quizTypeNames = ['Artist quiz', 'Picture quiz'];
+    this.titleString = `${quizTypeNames[quizType]} - Level ${levelNumber + 1} - Pictures`;
+
+    this.getPic = (picNum, full = false) => {
       const pic = document.createElement('img');
-      pic.src = `./assets/gallery/img/${picNum}.avif`;
+      pic.src = full
+        ? `./assets/gallery/full/${picNum}full.avif`
+        : `./assets/gallery/img/${picNum}.avif`;
       pic.alt = `${gallery[picNumber].name}`;
       return pic;
     };

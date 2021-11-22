@@ -12,6 +12,7 @@ let isMusicPlaying;
 let quizType;
 let answersCounter;
 let trueAnswersCounter;
+let levelResultString;
 
 const settingsBtn = document.querySelector('.settings-btn');
 const controlsBtn = document.querySelector('.controls-btn');
@@ -283,20 +284,37 @@ class LevelCard {
     this.imageLink = `./assets/gallery/img/${picture.imageNum}.avif`;
   }
 
-  getCard() {
+  getCard(levelResult) {
     const card = document.createElement('div');
     const cardTitle = document.createElement('div');
+
     card.addEventListener('click', () => playSound('click'));
     card.style.backgroundImage = `url("${this.imageLink}")`;
     card.className = 'category-card pic-btn';
+
     cardTitle.className = 'category-title';
     cardTitle.innerHTML = `<i class="fa-regular">${this.levelNumber}</i>`;
+
+    if (levelResult) {
+      card.classList.add('level-passed');
+      const levelIndicator = document.createElement('div');
+      levelIndicator.textContent = levelResult.split('').reduce((sum, i) => sum + i, 0);
+    }
     card.append(cardTitle);
     return card;
   }
 }
 
 //! ------------------------------
+
+const saveResultToLS = (_question, failed = false) => {
+  const levelNumber = `quizType_${_question.quizType}_level_${_question.levelNumber}`;
+  if (!failed) {
+    localStorage.setItem(`${levelNumber}_result`, levelResultString);
+  } else {
+    localStorage.removeItem(`${levelNumber}_result`);
+  }
+};
 
 const togglePopup = (popup, dir) => {
   if (dir) {
@@ -314,7 +332,12 @@ const goToLevels = () => {
   getGallery().then(() => {
     for (let level = 1; level <= 12; level += 1) {
       const card = new LevelCard(level, quizType);
-      categoriesContainer.append(card.getCard());
+      const levelResultKey = `quizType_${quizType}_level_${level - 1}_result`;
+      const levelResult = localStorage.getItem(levelResultKey)
+        ? localStorage.getItem(levelResultKey)
+        : false;
+      console.log(levelResult);
+      categoriesContainer.append(card.getCard(levelResult));
     }
     smoothChangeModule(categoriesModule, ...staticModules);
     levelCards = document.querySelectorAll('.category-card');
@@ -329,6 +352,8 @@ const answerChoise = (_question, inputAnswerNumber) => {
   trueAnswerPopup.innerHTML = _question.getTrueAnswerPopup(trueness);
 
   if (trueness) trueAnswersCounter += 1;
+
+  levelResultString += trueness ? '1' : '0';
   togglePopup(trueAnswerPopupContainer, true);
 
   const nextPicBtn = document.querySelector('.next-btn');
@@ -339,7 +364,7 @@ const defineAnswerButtons = (_question, _quizType) => {
   const btnsSet = !_quizType
     ? document.querySelectorAll('.artist-answer')
     : document.querySelectorAll('.pic-answer');
-  console.log(btnsSet)
+
   btnsSet.forEach((btn, inputAnswerNumber) => {
     btn.addEventListener('click', () => {
       answerChoise(_question, inputAnswerNumber);
@@ -349,7 +374,7 @@ const defineAnswerButtons = (_question, _quizType) => {
 
 const goToNextPic = (_question) => {
   answersCounter += 1;
-  if (answersCounter < 10) {
+  if (answersCounter < 2) {
     _question.nextQuestion();
 
     if (!quizType) artistQuizModule.innerHTML = _question.getArtistQuizQuestion();
@@ -362,6 +387,7 @@ const goToNextPic = (_question) => {
     finishLevelPopupContainer.append(popup.popup);
     togglePopup(finishLevelPopupContainer, true);
     popup.backBtn.addEventListener('click', () => {
+      saveResultToLS(_question, !levelResultString.includes('1'));
       togglePopup(trueAnswerPopupContainer, false);
       togglePopup(finishLevelPopupContainer, false);
       goToLevels();
@@ -371,6 +397,7 @@ const goToNextPic = (_question) => {
 
 const levelStart = (levelNumber) => {
   let quizModule;
+  levelResultString = '';
   answersCounter = 0;
   trueAnswersCounter = 0;
   switch (quizType) {

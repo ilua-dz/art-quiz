@@ -306,6 +306,18 @@ a {
   width: 10vmax;
   height: 10vmax;
   border-radius: 10%;
+  filter: grayscale(1);
+}
+
+.category-card-indicator {
+  width: 20%;
+  height: 20%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  border: 1px solid var(--bg-color);
+  background-color: var(--bg-color2);
 }
 
 .category-title {

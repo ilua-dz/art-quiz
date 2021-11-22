@@ -17,3 +17,7 @@
 .falseBg {
   background-color: var(--false-color);
 }
+
+.level-passed {
+  filter: grayscale(0) !important;
+}

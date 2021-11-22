@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import QuizQuestion from './QuizQuestion.js';
 import FinishLevelPopup from './finishLevelPopup.js';
 
@@ -113,6 +114,9 @@ backBtns.forEach((btn) => {
 const audioObj = {
   click: './assets/sounds/click.mp3',
   bgMusic: './assets/sounds/playback.weba',
+  trueAnswer: './assets/sounds/true-answer.mp3',
+  falseAnswer: './assets/sounds/wrong-answer.mp3',
+  endLevel: './assets/sounds/end-round.mp3',
 };
 
 const audio = document.createElement('audio');
@@ -298,7 +302,14 @@ class LevelCard {
     if (levelResult) {
       card.classList.add('level-passed');
       const levelIndicator = document.createElement('div');
-      levelIndicator.textContent = levelResult.split('').reduce((sum, i) => sum + i, 0);
+      levelIndicator.addEventListener('click', (event) => {
+        console.log(this.levelNumber);
+        event.stopPropagation();
+      });
+      levelIndicator.classList.add('category-card-indicator');
+      const levelResultParsed = levelResult.split('').reduce((sum, i) => sum + +i, 0);
+      levelIndicator.textContent = `${levelResultParsed}/10`;
+      card.append(levelIndicator);
     }
     card.append(cardTitle);
     return card;
@@ -336,7 +347,6 @@ const goToLevels = () => {
       const levelResult = localStorage.getItem(levelResultKey)
         ? localStorage.getItem(levelResultKey)
         : false;
-      console.log(levelResult);
       categoriesContainer.append(card.getCard(levelResult));
     }
     smoothChangeModule(categoriesModule, ...staticModules);
@@ -351,7 +361,10 @@ const answerChoise = (_question, inputAnswerNumber) => {
   const trueness = _question.trueAnswerNumber === inputAnswerNumber;
   trueAnswerPopup.innerHTML = _question.getTrueAnswerPopup(trueness);
 
-  if (trueness) trueAnswersCounter += 1;
+  if (trueness) {
+    playSound('trueAnswer');
+    trueAnswersCounter += 1;
+  } else playSound('falseAnswer');
 
   levelResultString += trueness ? '1' : '0';
   togglePopup(trueAnswerPopupContainer, true);
@@ -365,6 +378,9 @@ const defineAnswerButtons = (_question, _quizType) => {
     ? document.querySelectorAll('.artist-answer')
     : document.querySelectorAll('.pic-answer');
 
+  const backToLevelsBtns = document.querySelectorAll('.back-levels');
+  backToLevelsBtns.forEach((btn) => btn.addEventListener('click', goToLevels));
+
   btnsSet.forEach((btn, inputAnswerNumber) => {
     btn.addEventListener('click', () => {
       answerChoise(_question, inputAnswerNumber);
@@ -374,7 +390,7 @@ const defineAnswerButtons = (_question, _quizType) => {
 
 const goToNextPic = (_question) => {
   answersCounter += 1;
-  if (answersCounter < 2) {
+  if (answersCounter < 10) {
     _question.nextQuestion();
 
     if (!quizType) artistQuizModule.innerHTML = _question.getArtistQuizQuestion();
@@ -383,6 +399,7 @@ const goToNextPic = (_question) => {
     defineAnswerButtons(_question, quizType);
     togglePopup(trueAnswerPopupContainer, false);
   } else {
+    playSound('endLevel');
     const popup = new FinishLevelPopup(trueAnswersCounter);
     finishLevelPopupContainer.append(popup.popup);
     togglePopup(finishLevelPopupContainer, true);

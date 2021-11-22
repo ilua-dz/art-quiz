@@ -84,16 +84,20 @@ a {
   color: var(--text-color);
   cursor: pointer;
   transform: scale(1);
-  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+  transition: color, transform, filter, text-shadow;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.3s;
 }
 
 .decorate-button:hover {
   color: var(--hover-color);
   transform: scale(1.05, 1.05);
+  text-shadow: 0 0 15px var(--hover-color);
 }
 
 .decorate-button:active {
   transform: scale(0.9, 0.9);
+  text-shadow: 0 0 5px var(--hover-color);
 }
 
 .wrapper {
@@ -202,7 +206,7 @@ a {
   height: 100%;
 }
 
-.rss-footer-link:hover {
+.rss-footer-link img:hover {
   filter: invert(64%) sepia(73%) saturate(1506%) hue-rotate(356deg) brightness(98%) contrast(92%);
 }
 
@@ -287,6 +291,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 1.7vh;
 }
 
 .categories-container {
@@ -303,21 +308,32 @@ a {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  width: 10vmax;
-  height: 10vmax;
+  width: 20vh;
+  height: 20vh;
   border-radius: 10%;
   filter: grayscale(1);
 }
 
 .category-card-indicator {
-  width: 20%;
-  height: 20%;
   position: absolute;
+  font-family: "Font Awesome 6 Pro";
   right: 0;
   bottom: 0;
-  border-radius: 50%;
-  border: 1px solid var(--bg-color);
+  width: 37%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--true-color);
+  border-radius: 3vmax;
+  border: 1px solid var(--true-color);
   background-color: var(--bg-color2);
+  transition: text-shadow 0.3s, box-shadow 0.3s;
+}
+
+.category-card-indicator:hover {
+  text-shadow: 0 0 1rem white;
+  box-shadow: 0 0 1rem white;
 }
 
 .category-title {
@@ -397,6 +413,13 @@ a {
   max-width: 47%;
   max-height: 40vh;
   border-radius: 1.5vmin;
+}
+
+.artist-quiz-module .back-levels,
+.pic-quiz-module .back-levels {
+  position: absolute;
+  left: 0;
+  top: -2.5vmax;
 }
 
 .popup-container {
@@ -549,6 +572,10 @@ a {
     width: 80vw;
     height: 20.5vh;
     object-fit: cover;
+  }
+  .artist-quiz-module .back-levels,
+  .pic-quiz-module .back-levels {
+    top: -4vmax;
   }
   .true-answer-popup img {
     width: 85vw;

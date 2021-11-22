@@ -58,6 +58,10 @@ export default class {
 
     const title = document.createElement('h2');
 
+    this.backBtn = document.createElement('i');
+    this.backBtn.classList.add('fa-thin', 'fa-square-left', 'decorate-button', 'fa-sizing', '_btn', 'back-levels');
+    node.append(this.backBtn);
+
     return { node, answerSet, title };
   }
 

@@ -455,7 +455,7 @@ const defineAnswerButtons = (_question, _quizType) => {
 const goToNextPic = (_question) => {
   isAnswerChoised = false;
   answersCounter += 1;
-  if (answersCounter < 2) {
+  if (answersCounter < 10) {
     _question.nextQuestion();
 
     if (!quizType) artistQuizModule.innerHTML = _question.getArtistQuizQuestion();

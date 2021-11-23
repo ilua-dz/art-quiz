@@ -9,7 +9,7 @@ export default class {
   <h2>${trueAnswersCount}/10</h2>`;
 
     this.backBtn = document.createElement('i');
-    this.backBtn.classList.add('fa-thin', 'fa-square-left', 'decorate-button', 'fa-sizing', '_btn', 'back-levels');
+    this.backBtn.classList.add('fa-thin', 'fa-square-left', 'decorate-button', 'fa-sizing', '_btn', 'back-levels', 'popup-back-levels');
 
     this.popup.append(description, this.backBtn);
   }

@@ -585,6 +585,7 @@ a {
     border-radius: 3vmax;
   }
   .pic-quiz-module {
+    width: initial;
     flex-direction: column;
     align-items: center;
   }
@@ -593,7 +594,7 @@ a {
     padding: 1vw;
   }
   .pic-quiz-module img {
-    width: 80vw;
+    max-width: 80vw;
     height: 20.5vh;
     object-fit: cover;
   }
@@ -614,4 +615,19 @@ a {
   .decorate-button:hover {
     transform: scale(1, 1);
   }
+}
+
+.stretch-space-icon {
+  transform: scale(1.57, 1.05) translateX(-17%);
+}
+
+.stretch-space-icon::after {
+  content: "space";
+  position: absolute;
+  top: 37%;
+  left: 5%;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  font-size: 25%;
+  transform: scale(1, 2);
 }

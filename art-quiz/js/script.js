@@ -130,8 +130,45 @@ const smoothChangeModule = (onModule, ...allModules) => {
 controlsBtn.addEventListener('click', () => smoothChangeModule(controlsModule, ...staticModules));
 settingsBtn.addEventListener('click', () => smoothChangeModule(settingsModule, ...staticModules));
 
+const audioLib = {
+  click: './assets/sounds/click.mp3',
+  bgMusic: './assets/sounds/playback.weba',
+  trueAnswer: './assets/sounds/true-answer.mp3',
+  falseAnswer: './assets/sounds/wrong-answer.mp3',
+  endLevel: './assets/sounds/end-round.mp3',
+  timeGameBg: './assets/sounds/time-game-bg.mp3',
+};
+
+// const audio = document.createElement('audio');
+let audio = new Audio();
+
+const bgAudio = new Audio(audioLib.bgMusic);
+const timeGameBg = new Audio(audioLib.timeGameBg);
+
+const playSound = (src) => {
+  if (!isVolumeMute) {
+    audio = new Audio(audioLib[src]);
+    audio.volume = soundVolume;
+    audio.play();
+  }
+};
+
+const timeGameMusicToggle = (dir) => {
+  if (isMusicPlaying) {
+    if (dir) {
+      bgAudio.pause();
+      timeGameBg.play();
+    } else {
+      bgAudio.play();
+      timeGameBg.pause();
+      timeGameBg.currentTime = 0;
+    }
+  }
+};
+
 const leaveGame = () => {
   clearTimeout(timerId);
+  timeGameMusicToggle(false);
   inGame = false;
   artistQuizModule.innerHTML = '';
   picQuizModule.innerHTML = '';
@@ -141,29 +178,6 @@ backBtns.forEach((btn) => {
   leaveGame();
   btn.addEventListener('click', () => smoothChangeModule(startModule, ...staticModules));
 });
-
-const audioObj = {
-  click: './assets/sounds/click.mp3',
-  bgMusic: './assets/sounds/playback.weba',
-  trueAnswer: './assets/sounds/true-answer.mp3',
-  falseAnswer: './assets/sounds/wrong-answer.mp3',
-  endLevel: './assets/sounds/end-round.mp3',
-};
-
-// const audio = document.createElement('audio');
-let audio = new Audio();
-
-const bgAudio = document.createElement('audio');
-bgAudio.src = audioObj.bgMusic;
-
-const playSound = (src) => {
-  if (!isVolumeMute) {
-    audio = new Audio();
-    audio.volume = soundVolume;
-    audio.src = audioObj[src];
-    audio.play();
-  }
-};
 
 allButtons.forEach((btn) => {
   btn.addEventListener('click', () => playSound('click'));
@@ -209,13 +223,19 @@ const changeTimer = () => {
 const toggleMusic = () => {
   musicToggleBtn.classList.toggle('fa-music');
   musicToggleBtn.classList.toggle('fa-music-slash');
-  if (isMusicPlaying) bgAudio.pause();
-  else bgAudio.play();
+  if (isMusicPlaying) {
+    bgAudio.pause();
+    timeGameBg.pause();
+    timeGameBg.currentTime = 0;
+  } else if (inGame && !isAnswerChoised) {
+    timeGameBg.play();
+  } else bgAudio.play();
   isMusicPlaying = !isMusicPlaying;
 };
 
 const changeMusicVolume = () => {
   bgAudio.volume = musicVolumeInput.value / 100;
+  timeGameBg.volume = musicVolumeInput.value / 100;
 };
 
 volumeToggleBtn.addEventListener('click', toggleVolume);
@@ -256,8 +276,10 @@ const restoreSettings = () => {
 
   if (localStorage.getItem('musicVolume')) {
     bgAudio.volume = localStorage.getItem('musicVolume');
+    timeGameBg.volume = localStorage.getItem('musicVolume');
   } else {
     bgAudio.volume = 0.6;
+    timeGameBg.volume = 0.6;
   }
   musicVolumeInput.value = bgAudio.volume * 100;
 
@@ -272,7 +294,7 @@ const restoreSettings = () => {
 };
 
 const restorePlayingMusic = () => {
-  const track = new Audio(audioObj.bgMusic);
+  const track = new Audio(audioLib.bgMusic);
   track.onloadeddata = () => {
     if (localStorage.getItem('isMusicPlaying')) {
       bgAudio.src = track.src;
@@ -426,6 +448,8 @@ const goToScores = (levelNumber) => {
 };
 
 const answerChoise = (_question, inputAnswerNumber) => {
+  timeGameMusicToggle(false);
+
   isAnswerChoised = true;
   const trueness = _question.trueAnswerNumber === inputAnswerNumber;
   picInfoPopup.innerHTML = _question.getTrueAnswerPopup(trueness);
@@ -459,6 +483,7 @@ window.addEventListener('keyup', (e) => {
 
 const defineAnswerButtons = (_question, _quizType) => {
   if (isTimerOn) {
+    timeGameMusicToggle(true);
     document.querySelector('.timer-block').classList.add('grayscale-0');
     const timeLeftElement = document.querySelector('.time-left-block');
     setTimeout(() => {

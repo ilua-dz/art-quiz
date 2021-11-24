@@ -12,7 +12,7 @@ export default class {
 
     this.picElement = (picObj) => {
       const pic = document.createElement('img');
-      pic.src = `./assets/gallery/full/${picObj.imageNum}full.avif`
+      pic.src = `./assets/gallery/full/${picObj.imageNum}full.avif`;
       pic.alt = `${picObj.name}`;
       return pic;
     };
@@ -59,11 +59,21 @@ export default class {
 
     const title = document.createElement('h2');
 
+    // const timerEl = document.createElement('div');
+    // timerEl.classList.add('timer-block');
+
+    // const timeLeftEl = document.createElement('div');
+    // timeLeftEl.classList.add('time-left-block');
+
+    // timerEl.append(timeLeftEl);
+
     this.backBtn = document.createElement('i');
     this.backBtn.classList.add('fa-thin', 'fa-square-left', 'decorate-button', 'fa-sizing', '_btn', 'back-levels');
     node.append(this.backBtn);
 
-    return { node, answerSet, title };
+    return {
+      node, answerSet, title, /*timerEl,*/
+    };
   }
 
   getArtistQuizQuestion() {
@@ -74,6 +84,7 @@ export default class {
     question.title.textContent = 'Who is the author of the picture?';
 
     const answersList = document.createElement('ul');
+    // answersList.append(question.timerEl);
 
     question.answerSet.answers.forEach((answer) => {
       const answerString = document.createElement('li');

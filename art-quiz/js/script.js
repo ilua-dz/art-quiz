@@ -243,8 +243,9 @@ const restoreSettings = () => {
   musicVolumeInput.value = bgAudio.volume * 100;
 
   if (localStorage.getItem('timerTime')) {
-    timerInput.value = localStorage.getItem('timerTime');
-    changeTimer();
+    timerTime = localStorage.getItem('timerTime');
+    timerInput.value = timerTime;
+    if (isTimerOn) timerToggleBtn.textContent = timerTime;
   }
   if (localStorage.getItem('isTimerOn')) {
     toggleTimer();
@@ -426,8 +427,8 @@ window.addEventListener('keyup', (e) => {
   if (inGame && !isAnswerChoised) {
     for (let i = 0; i < 4; i += 1) {
       if (e.code === `Digit${i + 1}` || e.code === `Numpad${i + 1}`) {
-        document.querySelectorAll('.artist-answer')[i].click();
-        document.querySelectorAll('.pic-answer')[i].click();
+        if (!quizType) document.querySelectorAll('.artist-answer')[i].click();
+        else document.querySelectorAll('.pic-answer')[i].click();
       }
     }
   } else if (e.code === 'Space' && inGame && isAnswerChoised) {
@@ -508,3 +509,21 @@ quizTypeMenu.forEach((quizTypebtn, _quizType) => {
     goToLevels();
   });
 });
+
+// let width = 100;
+
+// const timerStart = (timer) => {
+//   setTimeout(() => {
+//     width -= 0.1;
+//     timer -= timer / 2500;
+//     console.log(width.toFixed(2));
+//     if (width > 0.1) timerStart(timer);
+//   }, timer);
+// };
+
+// setTimeout(() => {
+//   console.log('last ' + timerTime);
+//   timerStart(20);
+// }, 100);
+
+// timerStart(10);

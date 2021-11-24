@@ -29,7 +29,7 @@ export default class {
       pic.classList.add('scores-pic-btn');
       if (levelResult) {
         if (levelResult[i] === '1') {
-          pic.classList.add('level-passed', 'pic-btn', 'resolved-pic');
+          pic.classList.add('grayscale-0', 'pic-btn', 'resolved-pic');
         } else {
           pic.classList.add('secret-pic');
         }

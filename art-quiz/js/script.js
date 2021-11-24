@@ -354,7 +354,11 @@ class LevelCard {
     const cardTitle = document.createElement('div');
 
     card.addEventListener('click', () => playSound('click'));
-    card.style.backgroundImage = `url("${this.imageLink}")`;
+
+    this.image = new Image();
+    this.image.src = this.imageLink;
+    card.style.backgroundImage = `url("${this.image.src}")`;
+
     card.className = 'category-card pic-btn';
 
     cardTitle.className = 'category-title';
@@ -399,9 +403,8 @@ const togglePopup = (popup, dir) => {
 };
 
 const goToLevels = () => {
-  leaveGame();
-  quizTypeString.textContent = quizTypeNames[quizType];
   categoriesContainer.innerHTML = '';
+  quizTypeString.textContent = quizTypeNames[quizType];
   getGallery().then(() => {
     for (let level = 1; level <= 12; level += 1) {
       const card = new LevelCard(level, quizType);
@@ -410,8 +413,13 @@ const goToLevels = () => {
         ? localStorage.getItem(levelResultKey)
         : false;
       categoriesContainer.append(card.getCard(levelResult));
+      if (level === 12) {
+        card.image.onload = () => {
+          smoothChangeModule(categoriesModule, ...staticModules);
+          leaveGame();
+        };
+      }
     }
-    smoothChangeModule(categoriesModule, ...staticModules);
     levelCards = document.querySelectorAll('.category-card');
     levelCards.forEach((card, cardNumber) => {
       card.addEventListener('click', () => levelStart(cardNumber));
@@ -513,12 +521,14 @@ const goToNextPic = (_question) => {
 
     if (!quizType) artistQuizModule.innerHTML = _question.getArtistQuizQuestion();
     else picQuizModule.innerHTML = _question.getPictureQuizQuestion();
-
     defineAnswerButtons(_question, quizType);
-    togglePopup(picInfoPopupContainer, false);
-    setTimeout(() => {
-      isAnswerChoised = false;
-    }, 1000);
+
+    _question.nextPicture.onload = () => {
+      togglePopup(picInfoPopupContainer, false);
+      setTimeout(() => {
+        isAnswerChoised = false;
+      }, 1000);
+    };
   } else {
     inGame = false;
     isAnswerChoised = false;
@@ -548,13 +558,16 @@ const levelStart = (levelNumber) => {
     case 1: quizModule = picQuizModule; break;
     default: break;
   }
-  smoothChangeModule(quizModule, ...staticModules);
 
   getGallery().then(() => {
     const question = new QuizQuestion(quizType, levelNumber, galleryArr);
 
     if (!quizType) artistQuizModule.innerHTML = question.getArtistQuizQuestion();
     else picQuizModule.innerHTML = question.getPictureQuizQuestion();
+
+    question.picture.onload = () => {
+      smoothChangeModule(quizModule, ...staticModules);
+    };
 
     defineAnswerButtons(question, quizType);
   });

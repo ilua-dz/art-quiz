@@ -11,8 +11,13 @@ export default class {
     };
 
     this.picElement = (picObj) => {
+      this.picture = new Image();
+      this.picture.src = `./assets/gallery/full/${picObj.imageNum}full.avif`;
+      this.nextPicture = new Image();
+      this.nextPicture.src = `./assets/gallery/full/${+picObj.imageNum + 1}full.avif`;
+
       const pic = document.createElement('img');
-      pic.src = `./assets/gallery/full/${picObj.imageNum}full.avif`;
+      pic.src = this.picture.src;
       pic.alt = `${picObj.name}`;
       return pic;
     };

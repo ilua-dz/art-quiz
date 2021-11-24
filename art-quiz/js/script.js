@@ -448,9 +448,9 @@ const goToScores = (levelNumber) => {
 };
 
 const answerChoise = (_question, inputAnswerNumber) => {
+  isAnswerChoised = true;
   timeGameMusicToggle(false);
 
-  isAnswerChoised = true;
   const trueness = _question.trueAnswerNumber === inputAnswerNumber;
   picInfoPopup.innerHTML = _question.getTrueAnswerPopup(trueness);
 
@@ -507,7 +507,6 @@ const defineAnswerButtons = (_question, _quizType) => {
 };
 
 const goToNextPic = (_question) => {
-  isAnswerChoised = false;
   answersCounter += 1;
   if (answersCounter < 10) {
     _question.nextQuestion();
@@ -517,12 +516,16 @@ const goToNextPic = (_question) => {
 
     defineAnswerButtons(_question, quizType);
     togglePopup(picInfoPopupContainer, false);
+    setTimeout(() => {
+      isAnswerChoised = false;
+    }, 1000);
   } else {
+    inGame = false;
+    isAnswerChoised = false;
     playSound('endLevel');
     const popup = new FinishLevelPopup(trueAnswersCounter);
     finishLevelPopupContainer.append(popup.popup);
     togglePopup(finishLevelPopupContainer, true);
-    inGame = false;
     popup.backBtn.addEventListener('click', () => {
       saveResultToLS(_question, !levelResultString.includes('1'));
       togglePopup(picInfoPopupContainer, false);
@@ -539,6 +542,7 @@ const levelStart = (levelNumber) => {
   answersCounter = 0;
   trueAnswersCounter = 0;
   inGame = true;
+  isAnswerChoised = false;
   switch (quizType) {
     case 0: quizModule = artistQuizModule; break;
     case 1: quizModule = picQuizModule; break;

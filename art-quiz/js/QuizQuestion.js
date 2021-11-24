@@ -29,15 +29,16 @@ export default class {
     };
 
     let randomGallery = this.gallery.slice(this.quizType * 120, this.quizType * 120 + 120);
-    randomGallery.splice(this.levelNumber * 10, 10);
-    randomGallery = randomGallery.filter((pic) => pic.author !== this.picObj().author);
+    randomGallery.splice(this.levelNumber * 10, 10)
+      .filter((pic) => pic.author.toUpperCase() !== this.picObj().author.toUpperCase());
 
     const falseAnswers = [];
     for (let i = 0; i < 3; i += 1) {
       const randomPic = newRandomPic(randomGallery);
       const randomAuthor = randomPic.author;
       falseAnswers.push(randomPic);
-      randomGallery = randomGallery.filter((pic) => pic.author !== randomAuthor);
+      randomGallery = randomGallery
+        .filter((pic) => pic.author.toUpperCase() !== randomAuthor.toUpperCase());
     }
 
     falseAnswers.push(this.picObj());
@@ -47,6 +48,7 @@ export default class {
       const j = Math.floor(Math.random() * (i + 1));
       [answers[i], answers[j]] = [answers[j], answers[i]];
     }
+
     const trueAnswerNumber = answers.indexOf(this.picObj());
     return { trueAnswerNumber, answers };
   }

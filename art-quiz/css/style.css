@@ -373,6 +373,7 @@ a {
 }
 
 .artist-quiz-module ul {
+  margin-bottom: 0.5vh;
   width: 70vw;
   display: flex;
   flex-wrap: wrap;
@@ -402,10 +403,19 @@ a {
 
 .pic-quiz-module h2 {
   margin: 0;
+  padding: 1vh 0;
   width: 100%;
   height: unset;
   border-radius: 3vmax;
   border: 2px solid;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pic-quiz-module h2 .timer-block {
+  height: 1vh;
+  width: 104%;
 }
 
 .pic-quiz-module img {
@@ -519,12 +529,13 @@ a {
   height: 1.5vh;
   width: calc(93%);
   border-radius: 2vmax;
-  border: 1px double var(--text-color2);
+  border: 1px solid var(--text-color2);
   overflow: hidden;
+  filter: grayscale(1);
 }
 
 .time-left-block {
-  width: 80%;
+  width: 100%;
   height: 100%;
   background: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
   background-size: 400% 400%;
@@ -533,6 +544,7 @@ a {
   animation: rainbow 20s ease infinite;
   font-size: 25px;
   line-height: 25px;
+  /* transition: width 0.1s linear; */
 }
 
 @media (max-width: 1440px) {
@@ -626,7 +638,7 @@ a {
   }
   .pic-quiz-module h2 {
     width: 90vw;
-    padding: 1vw;
+    padding: 1vw 1vw 0 1vw;
   }
   .pic-quiz-module img {
     max-width: 80vw;

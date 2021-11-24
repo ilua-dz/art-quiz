@@ -7,6 +7,7 @@ import Scores from './Scores.js';
 
 let isTimerOn;
 let timerTime;
+let timerId;
 let isVolumeMute;
 let soundVolume;
 let isMusicPlaying;
@@ -53,6 +54,20 @@ const timerToggleBtn = document.querySelector('.timer-toggle');
 const timerInput = document.querySelector('.settings-timer-range');
 const allButtons = document.querySelectorAll('._btn');
 const allInputsTypeRange = document.querySelectorAll('input');
+
+//! ----------timer--------
+
+const timerStart = (time, timerIndicator, _question) => {
+  timerIndicator.classList.add(`trans-width-${time}`);
+  setTimeout(() => {
+    timerIndicator.classList.add('width-0');
+  }, 800);
+  timerId = setTimeout(() => {
+    if (!isAnswerChoised) answerChoise(_question, 4);
+  }, time * 1000 + 800);
+};
+
+//! -----------------------------
 
 const quizTypeNames = ['Artist quiz', 'Picture quiz'];
 
@@ -116,6 +131,7 @@ controlsBtn.addEventListener('click', () => smoothChangeModule(controlsModule, .
 settingsBtn.addEventListener('click', () => smoothChangeModule(settingsModule, ...staticModules));
 
 const leaveGame = () => {
+  clearTimeout(timerId);
   inGame = false;
   artistQuizModule.innerHTML = '';
   picQuizModule.innerHTML = '';
@@ -134,13 +150,16 @@ const audioObj = {
   endLevel: './assets/sounds/end-round.mp3',
 };
 
-const audio = document.createElement('audio');
+// const audio = document.createElement('audio');
+let audio = new Audio();
 
 const bgAudio = document.createElement('audio');
 bgAudio.src = audioObj.bgMusic;
 
 const playSound = (src) => {
   if (!isVolumeMute) {
+    audio = new Audio();
+    audio.volume = soundVolume;
     audio.src = audioObj[src];
     audio.play();
   }
@@ -320,7 +339,7 @@ class LevelCard {
     cardTitle.innerHTML = `<i class="fa-regular">${this.levelNumber}</i>`;
 
     if (levelResult) {
-      card.classList.add('level-passed');
+      card.classList.add('grayscale-0');
       const levelIndicator = document.createElement('div');
       levelIndicator.addEventListener('click', (event) => {
         goToScores(this.levelNumber - 1);
@@ -439,6 +458,14 @@ window.addEventListener('keyup', (e) => {
 });
 
 const defineAnswerButtons = (_question, _quizType) => {
+  if (isTimerOn) {
+    document.querySelector('.timer-block').classList.add('grayscale-0');
+    const timeLeftElement = document.querySelector('.time-left-block');
+    setTimeout(() => {
+      timerStart(timerTime, timeLeftElement, _question);
+    }, 100);
+  }
+
   const btnsSet = !_quizType
     ? document.querySelectorAll('.artist-answer')
     : document.querySelectorAll('.pic-answer');
@@ -448,6 +475,7 @@ const defineAnswerButtons = (_question, _quizType) => {
 
   btnsSet.forEach((btn, inputAnswerNumber) => {
     btn.addEventListener('click', () => {
+      clearTimeout(timerId);
       answerChoise(_question, inputAnswerNumber);
     });
   });
@@ -509,21 +537,3 @@ quizTypeMenu.forEach((quizTypebtn, _quizType) => {
     goToLevels();
   });
 });
-
-// let width = 100;
-
-// const timerStart = (timer) => {
-//   setTimeout(() => {
-//     width -= 0.1;
-//     timer -= timer / 2500;
-//     console.log(width.toFixed(2));
-//     if (width > 0.1) timerStart(timer);
-//   }, timer);
-// };
-
-// setTimeout(() => {
-//   console.log('last ' + timerTime);
-//   timerStart(20);
-// }, 100);
-
-// timerStart(10);

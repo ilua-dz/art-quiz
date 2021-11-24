@@ -59,20 +59,20 @@ export default class {
 
     const title = document.createElement('h2');
 
-    // const timerEl = document.createElement('div');
-    // timerEl.classList.add('timer-block');
+    const timerEl = document.createElement('div');
+    timerEl.classList.add('timer-block');
 
-    // const timeLeftEl = document.createElement('div');
-    // timeLeftEl.classList.add('time-left-block');
+    const timeLeftEl = document.createElement('div');
+    timeLeftEl.classList.add('time-left-block');
 
-    // timerEl.append(timeLeftEl);
+    timerEl.append(timeLeftEl);
 
     this.backBtn = document.createElement('i');
     this.backBtn.classList.add('fa-thin', 'fa-square-left', 'decorate-button', 'fa-sizing', '_btn', 'back-levels');
     node.append(this.backBtn);
 
     return {
-      node, answerSet, title, /*timerEl,*/
+      node, answerSet, title, timerEl,
     };
   }
 
@@ -84,7 +84,7 @@ export default class {
     question.title.textContent = 'Who is the author of the picture?';
 
     const answersList = document.createElement('ul');
-    // answersList.append(question.timerEl);
+    answersList.append(question.timerEl);
 
     question.answerSet.answers.forEach((answer) => {
       const answerString = document.createElement('li');
@@ -101,6 +101,8 @@ export default class {
     const question = this.getQuestion();
 
     question.title.textContent = `Choose a picture by ${this.picObj().author}`;
+    question.timerEl.classList.add('width-100');
+    question.title.append(question.timerEl);
 
     question.answerSet.answers.forEach((picObj, answerNumber) => {
       const answerImg = this.picElement(picObj);

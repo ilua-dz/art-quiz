@@ -18,7 +18,7 @@
   background-color: var(--false-color);
 }
 
-.level-passed {
+.grayscale-0 {
   filter: grayscale(0) !important;
 }
 
@@ -28,4 +28,34 @@
 
 .secret-pic {
   border: 2px solid var(--false-color);
+}
+
+.width-0 {
+  width: 0% !important;
+}
+.width-100 {
+  width: 100%;
+}
+
+.pos-a {
+  position: absolute !important;
+}
+
+.trans-width-30 {
+  transition: width 30s linear;
+}
+.trans-width-25 {
+  transition: width 25s linear;
+}
+.trans-width-20 {
+  transition: width 20s linear;
+}
+.trans-width-15 {
+  transition: width 15s linear;
+}
+.trans-width-10 {
+  transition: width 10s linear;
+}
+.trans-width-5 {
+  transition: width 5s linear;
 }

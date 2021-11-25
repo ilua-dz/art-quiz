@@ -34,7 +34,8 @@ export default class {
     };
 
     let randomGallery = this.gallery.slice(this.quizType * 120, this.quizType * 120 + 120);
-    randomGallery.splice(this.levelNumber * 10, 10)
+    randomGallery.splice(this.levelNumber * 10, 10);
+    randomGallery = randomGallery
       .filter((pic) => pic.author.toUpperCase() !== this.picObj().author.toUpperCase());
 
     const falseAnswers = [];
@@ -105,6 +106,7 @@ export default class {
   }
 
   getPictureQuizQuestion() {
+    this.picQuizImagesSrc = []; // for preload images
     const question = this.getQuestion();
 
     question.title.textContent = `Choose a picture by ${this.picObj().author}`;
@@ -116,6 +118,7 @@ export default class {
       answerImg.classList.add('pic-answer', 'pic-btn', '_btn');
       question.node.append(answerImg);
       if (answerNumber === 1) question.node.append(question.title);
+      this.picQuizImagesSrc.push(answerImg.src); // for preload images
     });
 
     return question.node.innerHTML;

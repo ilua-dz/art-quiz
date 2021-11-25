@@ -374,7 +374,7 @@ a {
 
 .artist-quiz-module ul {
   margin-bottom: 0.5vh;
-  width: 70vw;
+  min-width: 70vw;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -386,7 +386,8 @@ a {
   justify-content: center;
   align-items: center;
   height: 4vmin;
-  width: 30vw;
+  /* width: 30vw; */
+  width: 45%;
   text-transform: uppercase;
   border: 0.3vmin solid;
   border-radius: 2vh;
@@ -446,6 +447,8 @@ a {
 
 .popup {
   position: absolute;
+  max-width: 96vw;
+  overflow: hidden;
   padding: 2vmax;
   margin: 0 3vw;
   display: flex;

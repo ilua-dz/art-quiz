@@ -24,8 +24,11 @@ export default class {
       return pic;
     };
 
+    this.picsSrc = []; // for preload images
+
     for (let i = 0; i < 10; i += 1) {
       const pic = this.getPic(picNumber);
+      this.picsSrc.push(pic.src);
       pic.classList.add('scores-pic-btn');
       if (levelResult) {
         if (levelResult[i] === '1') {
@@ -44,6 +47,7 @@ export default class {
 
     const picElement = this.getPic(picNumber, 1);
     const pic = this.gallery[picNumber];
+    this.picSrc = picElement.src;
 
     const description = document.createElement('div');
     description.innerHTML = `<h2>${pic.name}</h2><h2>${pic.author}</h2><h2>${pic.year}</h2>`;

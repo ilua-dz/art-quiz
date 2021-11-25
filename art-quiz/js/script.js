@@ -381,7 +381,24 @@ class LevelCard {
   }
 }
 
-//! ------------------------------
+//! ----------preload ImageSet function--------------------
+
+const preloadImages = (sources, callback) => {
+  let counter = 0;
+
+  function onload() {
+    counter += 1;
+    if (counter === sources.length) callback();
+  }
+
+  sources.forEach((source) => {
+    const img = document.createElement('img');
+    img.onload = onload;
+    img.src = source;
+  });
+};
+
+//! ---------------------------------------
 
 const saveResultToLS = (_question, failed = false) => {
   const levelNumber = `quizType_${_question.quizType}_level_${_question.levelNumber}`;
@@ -395,7 +412,7 @@ const saveResultToLS = (_question, failed = false) => {
 const togglePopup = (popup, dir) => {
   if (dir) {
     popup.classList.toggle(offClass, !dir);
-    setTimeout(() => popup.classList.toggle(hideClass, !dir), 1);
+    setTimeout(() => popup.classList.toggle(hideClass, !dir), 200);
   } else {
     popup.classList.toggle(hideClass, !dir);
     setTimeout(() => popup.classList.toggle(offClass, !dir), 1000);
@@ -405,6 +422,15 @@ const togglePopup = (popup, dir) => {
 const goToLevels = () => {
   categoriesContainer.innerHTML = '';
   quizTypeString.textContent = quizTypeNames[quizType];
+
+  const categoriesPicSet = [];
+  const picsOnloadCallback = () => {
+    smoothChangeModule(categoriesModule, ...staticModules);
+    leaveGame();
+    togglePopup(picInfoPopupContainer, false);
+    togglePopup(finishLevelPopupContainer, false);
+  };
+
   getGallery().then(() => {
     for (let level = 1; level <= 12; level += 1) {
       const card = new LevelCard(level, quizType);
@@ -413,13 +439,9 @@ const goToLevels = () => {
         ? localStorage.getItem(levelResultKey)
         : false;
       categoriesContainer.append(card.getCard(levelResult));
-      if (level === 12) {
-        card.image.onload = () => {
-          smoothChangeModule(categoriesModule, ...staticModules);
-          leaveGame();
-        };
-      }
+      categoriesPicSet.push(card.image.src);
     }
+    preloadImages(categoriesPicSet, picsOnloadCallback);
     levelCards = document.querySelectorAll('.category-card');
     levelCards.forEach((card, cardNumber) => {
       card.addEventListener('click', () => levelStart(cardNumber));
@@ -429,7 +451,9 @@ const goToLevels = () => {
 
 const showPicInfo = (picNumber, _scores) => {
   picInfoPopup.innerHTML = _scores.getInfoPopup(_scores.firstPicNumber + picNumber);
-  togglePopup(picInfoPopupContainer, true);
+
+  preloadImages([_scores.picSrc], () => togglePopup(picInfoPopupContainer, true));
+
   const backBtn = document.querySelector('.popup-close-btn');
   backBtn.addEventListener('click', () => {
     togglePopup(picInfoPopupContainer, false);
@@ -442,7 +466,8 @@ const goToScores = (levelNumber) => {
   const scores = new Scores(quizType, levelNumber, galleryArr);
   scoresContainer.innerHTML = scores.node.innerHTML;
   scoresTitle.textContent = scores.titleString;
-  smoothChangeModule(scoresModule, ...staticModules);
+  preloadImages(scores.picsSrc, () => smoothChangeModule(scoresModule, ...staticModules));
+
   const picBtns = document.querySelectorAll('.scores-pic-btn');
   picBtns.forEach((btn, number) => {
     if (btn.classList.contains('resolved-pic')) {
@@ -519,16 +544,21 @@ const goToNextPic = (_question) => {
   if (answersCounter < 10) {
     _question.nextQuestion();
 
-    if (!quizType) artistQuizModule.innerHTML = _question.getArtistQuizQuestion();
-    else picQuizModule.innerHTML = _question.getPictureQuizQuestion();
-    defineAnswerButtons(_question, quizType);
-
-    _question.nextPicture.onload = () => {
+    const picsOnloadCallback = () => {
+      defineAnswerButtons(_question, quizType);
       togglePopup(picInfoPopupContainer, false);
       setTimeout(() => {
         isAnswerChoised = false;
       }, 1000);
     };
+
+    if (!quizType) {
+      artistQuizModule.innerHTML = _question.getArtistQuizQuestion();
+      _question.nextPicture.onload = picsOnloadCallback;
+    } else {
+      picQuizModule.innerHTML = _question.getPictureQuizQuestion();
+      preloadImages(_question.picQuizImagesSrc, picsOnloadCallback);
+    }
   } else {
     inGame = false;
     isAnswerChoised = false;
@@ -538,8 +568,6 @@ const goToNextPic = (_question) => {
     togglePopup(finishLevelPopupContainer, true);
     popup.backBtn.addEventListener('click', () => {
       saveResultToLS(_question, !levelResultString.includes('1'));
-      togglePopup(picInfoPopupContainer, false);
-      togglePopup(finishLevelPopupContainer, false);
       goToLevels();
       finishLevelPopupContainer.innerHTML = '';
     });
@@ -562,14 +590,18 @@ const levelStart = (levelNumber) => {
   getGallery().then(() => {
     const question = new QuizQuestion(quizType, levelNumber, galleryArr);
 
-    if (!quizType) artistQuizModule.innerHTML = question.getArtistQuizQuestion();
-    else picQuizModule.innerHTML = question.getPictureQuizQuestion();
-
-    question.picture.onload = () => {
+    const picsOnloadCallback = () => {
       smoothChangeModule(quizModule, ...staticModules);
+      defineAnswerButtons(question, quizType);
     };
 
-    defineAnswerButtons(question, quizType);
+    if (!quizType) {
+      artistQuizModule.innerHTML = question.getArtistQuizQuestion();
+      question.picture.onload = picsOnloadCallback;
+    } else {
+      picQuizModule.innerHTML = question.getPictureQuizQuestion();
+      preloadImages(question.picQuizImagesSrc, picsOnloadCallback);
+    }
   });
 };
 

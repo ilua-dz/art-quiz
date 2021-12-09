@@ -55,7 +55,6 @@ const musicToggleBtn = document.querySelector('.music-toggle');
 const musicVolumeInput = document.querySelector('.settings-music-range');
 const timerToggleBtn = document.querySelector('.timer-toggle');
 const timerInput = document.querySelector('.settings-timer-range');
-const allButtons = document.querySelectorAll('._btn');
 const allInputsTypeRange = document.querySelectorAll('input');
 
 //! ----------timer--------
@@ -187,8 +186,13 @@ backBtns.forEach((btn) => {
   );
 });
 
-allButtons.forEach((btn) => {
-  btn.addEventListener('click', () => playSound('click'));
+document.body.addEventListener('click', (e) => {
+  if (
+    e.target.classList.contains('_btn') ||
+    e.target.parentNode.classList.contains('_btn')
+  ) {
+    playSound('click');
+  }
 });
 
 allInputsTypeRange.forEach((input) => {
@@ -369,13 +373,11 @@ class LevelCard {
     const card = document.createElement('div');
     const cardTitle = document.createElement('div');
 
-    card.addEventListener('click', () => playSound('click'));
-
     this.image = new Image();
     this.image.src = this.imageLink;
     card.style.backgroundImage = `url("${this.image.src}")`;
 
-    card.className = 'category-card pic-btn';
+    card.className = 'category-card pic-btn _btn';
 
     cardTitle.className = 'category-title';
     cardTitle.innerHTML = `<i class="fa-regular">${this.levelNumber}</i>`;

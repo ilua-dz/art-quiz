@@ -1,6 +1,8 @@
-import QuizQuestion from './quiz-question.js';
-import FinishLevelPopup from './finish-level-popup.js';
-import Scores from './scores.js';
+import '../css/style.css';
+
+import QuizQuestion from './quiz-question';
+import FinishLevelPopup from './finish-level-popup';
+import Scores from './scores';
 
 //! ------------settings
 
@@ -56,18 +58,6 @@ const musicVolumeInput = document.querySelector('.settings-music-range');
 const timerToggleBtn = document.querySelector('.timer-toggle');
 const timerInput = document.querySelector('.settings-timer-range');
 const allInputsTypeRange = document.querySelectorAll('input');
-
-//! ----------timer--------
-
-const timerStart = (time, timerIndicator, _question) => {
-  timerIndicator.classList.add(`trans-width-${time}`);
-  setTimeout(() => {
-    timerIndicator.classList.add('width-0');
-  }, 800);
-  timerId = setTimeout(() => {
-    if (!isAnswerChoised) answerChoise(_question, 4);
-  }, time * 1000 + 800);
-};
 
 //! -----------------------------
 
@@ -540,6 +530,20 @@ window.addEventListener('keyup', (e) => {
   }
 });
 
+//! ----------timer--------
+
+const timerStart = (time, timerIndicator, _question) => {
+  timerIndicator.classList.add(`trans-width-${time}`);
+  setTimeout(() => {
+    timerIndicator.classList.add('width-0');
+  }, 800);
+  timerId = setTimeout(() => {
+    if (!isAnswerChoised) answerChoise(_question, 4);
+  }, time * 1000 + 800);
+};
+
+//! ------------------------
+
 const defineAnswerButtons = (_question, _quizType) => {
   if (isTimerOn) {
     timeGameMusicToggle(true);
@@ -580,7 +584,7 @@ const goToNextPic = (_question) => {
 
     if (!quizType) {
       artistQuizModule.innerHTML = _question.getArtistQuizQuestion();
-      _question.nextPicture.onload = picsOnloadCallback;
+      _question.nextPicture.addEventListener('load', picsOnloadCallback);
     } else {
       picQuizModule.innerHTML = _question.getPictureQuizQuestion();
       preloadImages(_question.picQuizImagesSrc, picsOnloadCallback);

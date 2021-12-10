@@ -2,14 +2,24 @@ const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
   entry: './js/index.js',
+  // devtool: 'source-map',
   output: {
-    filename: '[contenthash].js',
+    hashDigestLength: 6,
+    filename: '[name]-[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
+  },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+      }),
+    ],
   },
   plugins: [
     new HTMLWebpackPlugin({
@@ -33,9 +43,7 @@ module.exports = {
           { loader: 'style-loader' },
           {
             loader: 'css-loader',
-            options: {
-              url: false,
-            },
+            options: { url: false },
           },
         ],
       },

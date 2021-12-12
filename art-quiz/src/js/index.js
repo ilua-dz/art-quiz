@@ -1,5 +1,8 @@
 import '../css/style.css';
 
+import HTMLElements from './html-elements';
+import { togglePopup, smoothChangeModule } from './render-functions';
+
 import LevelCard from './level-card';
 import QuizQuestion from './quiz-question';
 import FinishLevelPopup from './finish-level-popup';
@@ -18,122 +21,29 @@ let quizType;
 let answersCounter;
 let trueAnswersCounter;
 let levelResultString;
-
-const settingsBtn = document.querySelector('.settings-btn');
-const controlsBtn = document.querySelector('.controls-btn');
-const backBtns = document.querySelectorAll('.back-btn');
-
-const settingsModule = document.querySelector('.settings-module');
-const startModule = document.querySelector('.start-module');
-const controlsModule = document.querySelector('.controls-module');
-
-const categoriesModule = document.querySelector('.categories-module');
-const quizTypeString = document.querySelector('.quiz-type-string');
-const categoriesContainer = document.querySelector('.categories-container');
 let levelCards;
-
-const scoresModule = document.querySelector('.scores-module');
-const scoresContainer = document.querySelector('.scores-container');
-const scoresTitle = document.querySelector('.level-string');
-
-const artistQuizModule = document.querySelector('.artist-quiz-module');
-const picQuizModule = document.querySelector('.pic-quiz-module');
-const picInfoPopup = document.querySelector('.pic-info-popup');
-const picInfoPopupContainer = document.querySelector(
-  '.pic-info-popup-container'
-);
-const finishLevelPopupContainer = document.querySelector(
-  '.level-finish-popup-container'
-);
-
-const header = document.querySelector('.header');
-const miniHeader = document.querySelector('.mini-header');
-const footer = document.querySelector('.footer');
-const quizTypeMenu = document.querySelectorAll('.quiz-type-general');
-
-const volumeToggleBtn = document.querySelector('.volume-toggle');
-const volumeInput = document.querySelector('.settings-volume-range');
-const musicToggleBtn = document.querySelector('.music-toggle');
-const musicVolumeInput = document.querySelector('.settings-music-range');
-const timerToggleBtn = document.querySelector('.timer-toggle');
-const timerInput = document.querySelector('.settings-timer-range');
-const allInputsTypeRange = document.querySelectorAll('input');
 
 const quizTypeNames = ['Artist quiz', 'Picture quiz'];
 
 const staticModules = [
-  startModule,
-  settingsModule,
-  controlsModule,
-  categoriesModule,
-  artistQuizModule,
-  picQuizModule,
-  scoresModule,
-  footer,
+  HTMLElements.startModule,
+  HTMLElements.settingsModule,
+  HTMLElements.controlsModule,
+  HTMLElements.categoriesModule,
+  HTMLElements.artistQuizModule,
+  HTMLElements.picQuizModule,
+  HTMLElements.scoresModule,
+  HTMLElements.footer,
 ];
-
-const gameModules = [artistQuizModule, picQuizModule];
-
-const toggleClasses = (node, classes, dir = undefined) => {
-  classes.forEach((cssClass) => {
-    node.classList.toggle(cssClass, dir);
-  });
-};
-
-const toggleClassOfNodes = (cssClass, nodes, dir = undefined) => {
-  nodes.forEach((node) => node.classList.toggle(cssClass, dir));
-};
-
-const offClass = 'display-off';
-const onClass = 'display-on';
-const hideClass = 'opacity-off';
 
 //! --------------- Render utility functions ----------------
 
-const toggleHeader = (size) => {
-  if (!size) {
-    header.classList.add(offClass);
-    miniHeader.classList.remove(offClass);
-  } else {
-    header.classList.remove(offClass);
-    miniHeader.classList.add(offClass);
-  }
-};
-
-const smoothChangeModule = (onModule, ...allModules) => {
-  if (gameModules.includes(onModule)) allModules.push(header, miniHeader);
-  toggleClassOfNodes(hideClass, allModules, true);
-  setTimeout(() => {
-    allModules.forEach((module) => {
-      toggleClasses(module, [onClass, offClass], false);
-      if (module !== onModule) module.classList.toggle(offClass);
-      else module.classList.toggle(onClass);
-    });
-    footer.classList.toggle(offClass);
-    if (gameModules.includes(onModule)) toggleHeader();
-    else toggleHeader(1);
-  }, 300);
-  setTimeout(() => {
-    toggleClassOfNodes(hideClass, allModules, false);
-  }, 400);
-};
-
-const togglePopup = (popup, dir) => {
-  if (dir) {
-    popup.classList.toggle(offClass, !dir);
-    setTimeout(() => popup.classList.toggle(hideClass, !dir), 200);
-  } else {
-    popup.classList.toggle(hideClass, !dir);
-    setTimeout(() => popup.classList.toggle(offClass, !dir), 1000);
-  }
-};
-
-controlsBtn.addEventListener('click', () =>
-  smoothChangeModule(controlsModule, ...staticModules)
+HTMLElements.controlsBtn.addEventListener('click', () =>
+  smoothChangeModule(HTMLElements.controlsModule, ...staticModules)
 );
 
-settingsBtn.addEventListener('click', () =>
-  smoothChangeModule(settingsModule, ...staticModules)
+HTMLElements.settingsBtn.addEventListener('click', () =>
+  smoothChangeModule(HTMLElements.settingsModule, ...staticModules)
 );
 
 //! --------- Sounds and music -------------
@@ -182,33 +92,33 @@ document.body.addEventListener('click', (e) => {
   }
 });
 
-allInputsTypeRange.forEach((input) => {
+HTMLElements.allInputsTypeRange.forEach((input) => {
   input.addEventListener('change', () => playSound('click'));
 });
 
 const toggleSoundsVolume = () => {
-  toggleClasses(volumeToggleBtn, ['fa-volume-slash', 'fa-volume']);
+  HTMLElements.volumeToggleBtn.classList.add('fa-volume-slash', 'fa-volume');
   isVolumeMute = !isVolumeMute;
-  volumeInput.value = isVolumeMute ? 0 : soundVolume * 100;
+  HTMLElements.volumeInput.value = isVolumeMute ? 0 : soundVolume * 100;
 };
 
 const changeSoundsVolume = () => {
-  soundVolume = volumeInput.value / 100;
+  soundVolume = HTMLElements.volumeInput.value / 100;
   audio.volume = soundVolume;
   if (!soundVolume) {
-    toggleClasses(volumeToggleBtn, ['fa-volume-slash'], true);
-    toggleClasses(volumeToggleBtn, ['fa-volume'], false);
+    HTMLElements.volumeToggleBtn.classList.add('fa-volume-slash');
+    HTMLElements.volumeToggleBtn.classList.remove('fa-volume');
   } else {
-    toggleClasses(volumeToggleBtn, ['fa-volume-slash'], false);
-    toggleClasses(volumeToggleBtn, ['fa-volume'], true);
+    HTMLElements.volumeToggleBtn.classList.remove('fa-volume-slash');
+    HTMLElements.volumeToggleBtn.classList.add('fa-volume');
   }
   if (soundVolume) isVolumeMute = false;
 };
 changeSoundsVolume();
 
 const toggleMusic = () => {
-  musicToggleBtn.classList.toggle('fa-music');
-  musicToggleBtn.classList.toggle('fa-music-slash');
+  HTMLElements.musicToggleBtn.classList.toggle('fa-music');
+  HTMLElements.musicToggleBtn.classList.toggle('fa-music-slash');
   if (isMusicPlaying) {
     bgAudio.pause();
     timeGameBg.pause();
@@ -220,8 +130,8 @@ const toggleMusic = () => {
 };
 
 const changeMusicVolume = () => {
-  bgAudio.volume = musicVolumeInput.value / 100;
-  timeGameBg.volume = musicVolumeInput.value / 100;
+  bgAudio.volume = HTMLElements.musicVolumeInput.value / 100;
+  timeGameBg.volume = HTMLElements.musicVolumeInput.value / 100;
 };
 
 const restorePlayingMusic = () => {
@@ -235,11 +145,11 @@ const restorePlayingMusic = () => {
   window.removeEventListener('mousedown', restorePlayingMusic);
 };
 
-volumeToggleBtn.addEventListener('click', toggleSoundsVolume);
-volumeInput.addEventListener('input', changeSoundsVolume);
+HTMLElements.volumeToggleBtn.addEventListener('click', toggleSoundsVolume);
+HTMLElements.volumeInput.addEventListener('input', changeSoundsVolume);
 
-musicToggleBtn.addEventListener('click', toggleMusic);
-musicVolumeInput.addEventListener('input', changeMusicVolume);
+HTMLElements.musicToggleBtn.addEventListener('click', toggleMusic);
+HTMLElements.musicVolumeInput.addEventListener('input', changeMusicVolume);
 
 window.addEventListener('mousedown', restorePlayingMusic);
 
@@ -249,30 +159,30 @@ const leaveGame = () => {
   clearTimeout(timerId);
   timeGameMusicToggle(false);
   inGame = false;
-  artistQuizModule.innerHTML = '';
-  picQuizModule.innerHTML = '';
+  HTMLElements.artistQuizModule.innerHTML = '';
+  HTMLElements.picQuizModule.innerHTML = '';
 };
 
-backBtns.forEach((btn) => {
+HTMLElements.backBtns.forEach((btn) => {
   leaveGame();
   btn.addEventListener('click', () =>
-    smoothChangeModule(startModule, ...staticModules)
+    smoothChangeModule(HTMLElements.startModule, ...staticModules)
   );
 });
 
 //! -------------- Game timer -------------------
 
 const toggleTimer = () => {
-  timerTime = timerInput.value;
-  timerToggleBtn.classList.toggle('fa-hourglass-clock');
-  timerToggleBtn.textContent = isTimerOn ? '' : timerTime;
+  timerTime = HTMLElements.timerInput.value;
+  HTMLElements.timerToggleBtn.classList.toggle('fa-hourglass-clock');
+  HTMLElements.timerToggleBtn.textContent = isTimerOn ? '' : timerTime;
   isTimerOn = !isTimerOn;
-  timerInput.disabled = !isTimerOn;
+  HTMLElements.timerInput.disabled = !isTimerOn;
 };
 
 const changeTimer = () => {
-  timerTime = timerInput.value;
-  if (isTimerOn) timerToggleBtn.textContent = timerTime;
+  timerTime = HTMLElements.timerInput.value;
+  if (isTimerOn) HTMLElements.timerToggleBtn.textContent = timerTime;
 };
 
 const timerStart = (time, timerIndicator, _question) => {
@@ -285,8 +195,8 @@ const timerStart = (time, timerIndicator, _question) => {
   }, time * 1000 + 800);
 };
 
-timerToggleBtn.addEventListener('click', toggleTimer);
-timerInput.addEventListener('input', changeTimer);
+HTMLElements.timerToggleBtn.addEventListener('click', toggleTimer);
+HTMLElements.timerInput.addEventListener('input', changeTimer);
 
 //! ------------ Save and restore settings -------------------
 
@@ -301,20 +211,23 @@ const saveSettings = () => {
   LSsetBooleanItem(isVolumeMute, 'isVolumeMute');
   LSsetBooleanItem(isMusicPlaying, 'isMusicPlaying');
   LSsetBooleanItem(isTimerOn, 'isTimerOn');
-  localStorage.setItem('timerTime', timerInput.value);
+  localStorage.setItem('timerTime', HTMLElements.timerInput.value);
 };
 
 const restoreSettings = () => {
   if (localStorage.getItem('volume')) {
     soundVolume = +localStorage.getItem('volume');
     if (soundVolume < 0.05) {
-      toggleClasses(volumeToggleBtn, ['fa-volume', 'fa-volume-slash']);
+      HTMLElements.volumeToggleBtn.classList.add(
+        'fa-volume',
+        'fa-volume-slash'
+      );
     }
   } else {
     soundVolume = 0.1;
   }
   audio.volume = soundVolume;
-  volumeInput.value = audio.volume * 100;
+  HTMLElements.volumeInput.value = audio.volume * 100;
   if (localStorage.getItem('isVolumeMute')) toggleSoundsVolume();
 
   if (localStorage.getItem('musicVolume')) {
@@ -324,16 +237,16 @@ const restoreSettings = () => {
     bgAudio.volume = 0.5;
     timeGameBg.volume = 0.5;
   }
-  musicVolumeInput.value = bgAudio.volume * 100;
+  HTMLElements.musicVolumeInput.value = bgAudio.volume * 100;
 
   if (localStorage.getItem('timerTime')) {
     timerTime = localStorage.getItem('timerTime');
-    timerInput.value = timerTime;
-    if (isTimerOn) timerToggleBtn.textContent = timerTime;
+    HTMLElements.timerInput.value = timerTime;
+    if (isTimerOn) HTMLElements.timerToggleBtn.textContent = timerTime;
   }
   if (localStorage.getItem('isTimerOn')) {
     toggleTimer();
-  } else timerInput.disabled = true;
+  } else HTMLElements.timerInput.disabled = true;
 };
 
 window.addEventListener('beforeunload', saveSettings);
@@ -347,7 +260,7 @@ window.addEventListener('keyup', (e) => {
   playSound('click');
   switch (e.code) {
     case 'KeyQ':
-      smoothChangeModule(startModule, ...staticModules);
+      smoothChangeModule(HTMLElements.startModule, ...staticModules);
       break;
     case 'KeyM':
       toggleMusic();
@@ -405,26 +318,26 @@ const preloadImages = (sources, callback) => {
 //! ----------------- Render functions ----------------------
 
 const showPicInfo = (picNumber, _scores) => {
-  picInfoPopup.innerHTML = _scores.getInfoPopup(
+  HTMLElements.picInfoPopup.innerHTML = _scores.getInfoPopup(
     _scores.firstPicNumber + picNumber
   );
 
   preloadImages([_scores.picSrc], () =>
-    togglePopup(picInfoPopupContainer, true)
+    togglePopup(HTMLElements.picInfoPopupContainer, true)
   );
 
   const backBtn = document.querySelector('.popup-close-btn');
   backBtn.addEventListener('click', () => {
-    togglePopup(picInfoPopupContainer, false);
+    togglePopup(HTMLElements.picInfoPopupContainer, false);
   });
 };
 
 const renderScores = (levelNumber) => {
   const scores = new Scores(quizType, levelNumber, galleryArr);
-  scoresContainer.innerHTML = scores.node.innerHTML;
-  scoresTitle.textContent = scores.titleString;
+  HTMLElements.scoresContainer.innerHTML = scores.node.innerHTML;
+  HTMLElements.scoresTitle.textContent = scores.titleString;
   preloadImages(scores.picsSrc, () =>
-    smoothChangeModule(scoresModule, ...staticModules)
+    smoothChangeModule(HTMLElements.scoresModule, ...staticModules)
   );
 
   const picBtns = document.querySelectorAll('.scores-pic-btn');
@@ -440,15 +353,15 @@ const renderScores = (levelNumber) => {
 };
 
 const renderLevels = () => {
-  categoriesContainer.innerHTML = '';
-  quizTypeString.textContent = quizTypeNames[quizType];
+  HTMLElements.categoriesContainer.innerHTML = '';
+  HTMLElements.quizTypeString.textContent = quizTypeNames[quizType];
 
   const categoriesPicSet = [];
   const picsOnloadCallback = () => {
-    smoothChangeModule(categoriesModule, ...staticModules);
+    smoothChangeModule(HTMLElements.categoriesModule, ...staticModules);
     leaveGame();
-    togglePopup(picInfoPopupContainer, false);
-    togglePopup(finishLevelPopupContainer, false);
+    togglePopup(HTMLElements.picInfoPopupContainer, false);
+    togglePopup(HTMLElements.finishLevelPopupContainer, false);
   };
 
   getGallery().then(() => {
@@ -458,7 +371,7 @@ const renderLevels = () => {
       const levelResult = localStorage.getItem(levelResultKey)
         ? localStorage.getItem(levelResultKey)
         : false;
-      categoriesContainer.append(card.getCard(levelResult));
+      HTMLElements.categoriesContainer.append(card.getCard(levelResult));
       categoriesPicSet.push(card.image.src);
     }
     preloadImages(categoriesPicSet, picsOnloadCallback);
@@ -480,7 +393,7 @@ const answerChoise = (_question, inputAnswerNumber) => {
   timeGameMusicToggle(false);
 
   const trueness = _question.trueAnswerNumber === inputAnswerNumber;
-  picInfoPopup.innerHTML = _question.getTrueAnswerPopup(trueness);
+  HTMLElements.picInfoPopup.innerHTML = _question.getTrueAnswerPopup(trueness);
 
   if (trueness) {
     playSound('trueAnswer');
@@ -488,7 +401,7 @@ const answerChoise = (_question, inputAnswerNumber) => {
   } else playSound('falseAnswer');
 
   levelResultString += trueness ? '1' : '0';
-  togglePopup(picInfoPopupContainer, true);
+  togglePopup(HTMLElements.picInfoPopupContainer, true);
 
   const nextPicBtn = document.querySelector('.next-btn');
   nextPicBtn.addEventListener('click', () => renderNextQuestion(_question));
@@ -537,17 +450,18 @@ const renderNextQuestion = (_question) => {
 
     const picsOnloadCallback = () => {
       defineQuestionButtons(_question, quizType);
-      togglePopup(picInfoPopupContainer, false);
+      togglePopup(HTMLElements.picInfoPopupContainer, false);
       setTimeout(() => {
         isAnswerChoised = false;
       }, 1000);
     };
 
     if (!quizType) {
-      artistQuizModule.innerHTML = _question.getArtistQuizQuestion();
+      HTMLElements.artistQuizModule.innerHTML =
+        _question.getArtistQuizQuestion();
       _question.nextPicture.addEventListener('load', picsOnloadCallback);
     } else {
-      picQuizModule.innerHTML = _question.getPictureQuizQuestion();
+      HTMLElements.picQuizModule.innerHTML = _question.getPictureQuizQuestion();
       preloadImages(_question.picQuizImagesSrc, picsOnloadCallback);
     }
   } else {
@@ -555,12 +469,12 @@ const renderNextQuestion = (_question) => {
     isAnswerChoised = false;
     playSound('endLevel');
     const popup = new FinishLevelPopup(trueAnswersCounter);
-    finishLevelPopupContainer.append(popup.popup);
-    togglePopup(finishLevelPopupContainer, true);
+    HTMLElements.finishLevelPopupContainer.append(popup.popup);
+    togglePopup(HTMLElements.finishLevelPopupContainer, true);
     popup.backBtn.addEventListener('click', () => {
       saveResultToLS(_question, !levelResultString.includes('1'));
       renderLevels();
-      finishLevelPopupContainer.innerHTML = '';
+      HTMLElements.finishLevelPopupContainer.innerHTML = '';
     });
   }
 };
@@ -574,10 +488,10 @@ const levelStart = (levelNumber) => {
   isAnswerChoised = false;
   switch (quizType) {
     case 0:
-      quizModule = artistQuizModule;
+      quizModule = HTMLElements.artistQuizModule;
       break;
     case 1:
-      quizModule = picQuizModule;
+      quizModule = HTMLElements.picQuizModule;
       break;
     default:
       break;
@@ -592,16 +506,17 @@ const levelStart = (levelNumber) => {
     };
 
     if (!quizType) {
-      artistQuizModule.innerHTML = question.getArtistQuizQuestion();
+      HTMLElements.artistQuizModule.innerHTML =
+        question.getArtistQuizQuestion();
       question.picture.onload = picsOnloadCallback;
     } else {
-      picQuizModule.innerHTML = question.getPictureQuizQuestion();
+      HTMLElements.picQuizModule.innerHTML = question.getPictureQuizQuestion();
       preloadImages(question.picQuizImagesSrc, picsOnloadCallback);
     }
   });
 };
 
-quizTypeMenu.forEach((quizTypebtn, _quizType) => {
+HTMLElements.quizTypeMenu.forEach((quizTypebtn, _quizType) => {
   quizTypebtn.addEventListener('click', () => {
     quizType = _quizType;
     renderLevels();

@@ -3,7 +3,12 @@ import { audioLib } from '../utils/sounds';
 class Application {
   constructor() {
     this.inGame = false;
-    this.isAnswerChoised = false;
+    this.isAnswerChosen = false;
+    this.quizType = undefined;
+    this.answersCounter = undefined;
+    this.trueAnswersCounter = undefined;
+    this.levelResultString = undefined;
+    this.question = undefined;
 
     this.soundVolume = localStorage.getItem('soundVolume')
       ? +localStorage.getItem('soundVolume')
@@ -29,6 +34,14 @@ class Application {
 
   finishTimeGame() {
     this.timeGameBg.currentTime = 0;
+  }
+
+  startGame() {
+    this.levelResultString = '';
+    this.answersCounter = 0;
+    this.trueAnswersCounter = 0;
+    this.inGame = true;
+    this.isAnswerChosen = false;
   }
 
   switchSounds(direction = undefined) {

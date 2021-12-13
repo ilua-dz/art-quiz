@@ -1,11 +1,15 @@
 class LevelCard {
   constructor(levelNumber, _quizType, gallery) {
+    this.levelResultKey = `quizType_${_quizType}_level_${
+      levelNumber - 1
+    }_result`;
     const randomLevelPicture = () => {
       const levelImgStartNumber = levelNumber * 10 - 10 + _quizType * 120;
       const levelPics = gallery.slice(
         levelImgStartNumber,
         levelImgStartNumber + 10
       );
+
       return levelPics[Math.floor(Math.random() * levelPics.length)];
     };
 

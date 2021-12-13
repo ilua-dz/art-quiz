@@ -36,6 +36,18 @@ const HTMLElements = {
   timerToggleBtn: document.querySelector('.timer-toggle'),
   timerInput: document.querySelector('.settings-timer-range'),
   allInputsTypeRange: document.querySelectorAll('input'),
+
+  levelCards: () => document.querySelectorAll('.category-card'),
+  levelCardIndicator: (card) => card.querySelector('.category-card-indicator'),
+  backBtn: () => document.querySelector('.popup-close-btn'),
+  picBtns: () => document.querySelectorAll('.scores-pic-btn'),
+  backToLevelsBtn: () => document.querySelector('.back-levels'),
+  backToLevelsBtns: () => document.querySelectorAll('.back-levels'),
+  nextPicBtn: () => document.querySelector('.next-btn'),
+  artistQuizAnswerBtns: () => document.querySelectorAll('.artist-answer'),
+  pictureQuizAnswerBtns: () => document.querySelectorAll('.pic-answer'),
+  timerBlock: () => document.querySelector('.timer-block'),
+  timeLeftBlock: () => document.querySelector('.time-left-block'),
 };
 
 export default HTMLElements;

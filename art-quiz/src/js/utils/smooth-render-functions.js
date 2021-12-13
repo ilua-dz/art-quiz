@@ -13,7 +13,7 @@ const toggleHeader = (size) => {
   }
 };
 
-const smoothChangeModule = (onModule, ...allModules) => {
+const smoothChangePage = (onModule, ...allModules) => {
   if (gameModules.includes(onModule))
     allModules.push(HTMLElements.header, HTMLElements.miniHeader);
   allModules.forEach((module) => module.classList.add(cssUtils.hideClass));
@@ -48,4 +48,4 @@ const togglePopup = (popup, direction) => {
   }
 };
 
-export { togglePopup, smoothChangeModule };
+export { togglePopup, smoothChangePage };

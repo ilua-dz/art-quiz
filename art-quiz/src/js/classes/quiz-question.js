@@ -1,4 +1,4 @@
-export default class {
+class QuizQuestion {
   constructor(_quizType, levelNumber, gallery) {
     this.quizType = _quizType;
     this.levelNumber = levelNumber;
@@ -178,3 +178,5 @@ export default class {
     return popup.innerHTML;
   }
 }
+
+export default QuizQuestion;

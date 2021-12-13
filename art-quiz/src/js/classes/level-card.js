@@ -1,4 +1,4 @@
-export default class {
+class LevelCard {
   constructor(levelNumber, _quizType, gallery) {
     const randomLevelPicture = () => {
       const levelImgStartNumber = levelNumber * 10 - 10 + _quizType * 120;
@@ -41,3 +41,5 @@ export default class {
     return card;
   }
 }
+
+export default LevelCard;

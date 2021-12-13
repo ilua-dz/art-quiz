@@ -1,4 +1,4 @@
-export default class {
+class FinishLevelPopup {
   constructor(trueAnswersCount) {
     this.popup = document.createElement('div');
     this.popup.classList.add('popup', 'level-finish-popup');
@@ -22,3 +22,5 @@ export default class {
     this.popup.append(description, this.backBtn);
   }
 }
+
+export default FinishLevelPopup;

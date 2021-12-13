@@ -1,4 +1,4 @@
-export default class {
+class Scores {
   constructor(quizType, levelNumber, gallery) {
     this.gallery = [...gallery];
 
@@ -70,3 +70,5 @@ export default class {
     return popup.innerHTML;
   }
 }
+
+export default Scores;

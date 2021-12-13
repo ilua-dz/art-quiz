@@ -17,6 +17,8 @@ import {
   timeGameMusicToggle,
 } from './utils/sounds';
 
+import preloadImages from './utils/images-preload-function';
+
 import LevelCard from './classes/level-card';
 import QuizQuestion from './classes/quiz-question';
 import FinishLevelPopup from './classes/finish-level-popup';
@@ -257,23 +259,6 @@ const getGallery = async () => {
   const res = await fetch('./assets/gallery/gallery_data_en.json');
   const data = await res.json();
   galleryArr = data;
-};
-
-//! ---------- Images preload function --------------------
-
-const preloadImages = (sources, callback) => {
-  let counter = 0;
-
-  function onload() {
-    counter += 1;
-    if (counter === sources.length) callback();
-  }
-
-  sources.forEach((source) => {
-    const img = document.createElement('img');
-    img.onload = onload;
-    img.src = source;
-  });
 };
 
 //! ----------------- Render functions ----------------------

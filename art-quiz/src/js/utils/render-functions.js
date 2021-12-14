@@ -1,9 +1,7 @@
 import cssUtils from './css-utils';
-import HTMLElements from './html-elements';
+import { HTMLElements, gameModules } from './html-elements';
 
-const gameModules = [HTMLElements.artistQuizModule, HTMLElements.picQuizModule];
-
-const toggleHeader = (size) => {
+export const toggleHeader = (size) => {
   if (!size) {
     HTMLElements.header.classList.add(cssUtils.offClass);
     HTMLElements.miniHeader.classList.remove(cssUtils.offClass);
@@ -13,7 +11,7 @@ const toggleHeader = (size) => {
   }
 };
 
-const smoothChangePage = (onModule, ...allModules) => {
+export const smoothChangePage = (onModule, ...allModules) => {
   if (gameModules.includes(onModule))
     allModules.push(HTMLElements.header, HTMLElements.miniHeader);
   allModules.forEach((module) => module.classList.add(cssUtils.hideClass));
@@ -32,7 +30,7 @@ const smoothChangePage = (onModule, ...allModules) => {
   }, 400);
 };
 
-const togglePopup = (popup, direction) => {
+export const togglePopup = (popup, direction) => {
   if (direction) {
     popup.classList.toggle(cssUtils.offClass, !direction);
     setTimeout(
@@ -48,4 +46,29 @@ const togglePopup = (popup, direction) => {
   }
 };
 
-export { togglePopup, smoothChangePage };
+export const renderSettings = (app) => {
+  if (app.isSoundVolumeMute) {
+    HTMLElements.volumeToggleBtn.classList.add('fa-volume-slash');
+    HTMLElements.volumeToggleBtn.classList.remove('fa-volume');
+    HTMLElements.volumeInput.value = 0;
+  } else {
+    HTMLElements.volumeToggleBtn.classList.remove('fa-volume-slash');
+    HTMLElements.volumeToggleBtn.classList.add('fa-volume');
+    HTMLElements.volumeInput.value = app.soundVolume * 100;
+  }
+  if (app.isMusicPlaying) {
+    HTMLElements.musicToggleBtn.classList.add('fa-music');
+    HTMLElements.musicToggleBtn.classList.remove('fa-music-slash');
+  } else {
+    HTMLElements.musicToggleBtn.classList.remove('fa-music');
+    HTMLElements.musicToggleBtn.classList.add('fa-music-slash');
+  }
+  HTMLElements.musicVolumeInput.value = app.musicVolume * 100;
+
+  HTMLElements.timerInput.value = app.timerTime;
+  HTMLElements.timerInput.disabled = !app.isTimerOn;
+  if (app.isTimerOn) {
+    HTMLElements.timerToggleBtn.classList.remove('fa-hourglass-clock');
+    HTMLElements.timerToggleBtn.textContent = app.timerTime;
+  }
+};

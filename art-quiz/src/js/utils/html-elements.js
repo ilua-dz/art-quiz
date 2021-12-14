@@ -1,4 +1,4 @@
-const HTMLElements = {
+export const HTMLElements = {
   settingsBtn: document.querySelector('.settings-btn'),
   controlsBtn: document.querySelector('.controls-btn'),
   backBtns: document.querySelectorAll('.back-btn'),
@@ -50,4 +50,18 @@ const HTMLElements = {
   timeLeftBlock: () => document.querySelector('.time-left-block'),
 };
 
-export default HTMLElements;
+export const gameModules = [
+  HTMLElements.artistQuizModule,
+  HTMLElements.picQuizModule,
+];
+
+export const staticModules = [
+  HTMLElements.startModule,
+  HTMLElements.settingsModule,
+  HTMLElements.controlsModule,
+  HTMLElements.categoriesModule,
+  HTMLElements.artistQuizModule,
+  HTMLElements.picQuizModule,
+  HTMLElements.scoresModule,
+  HTMLElements.footer,
+];

@@ -1,4 +1,4 @@
-import HTMLElements from './html-elements';
+import { HTMLElements } from './html-elements';
 
 export const audioLib = {
   click: './assets/sounds/click.mp3',
@@ -30,44 +30,27 @@ export const timeGameMusicToggle = (direction, app) => {
   }
 };
 
-export const switchSounds = (app) => {
-  HTMLElements.volumeToggleBtn.classList.toggle('fa-volume');
-  HTMLElements.volumeToggleBtn.classList.toggle('fa-volume-slash');
-  app.switchSounds();
-  HTMLElements.volumeInput.value = app.isSoundVolumeMute
-    ? 0
-    : app.soundVolume * 100;
-};
-
-export const changeSoundsVolume = (app) => {
-  app.changeSoundVolume(HTMLElements.volumeInput.value / 100);
-  if (!app.soundVolume) {
-    HTMLElements.volumeToggleBtn.classList.add('fa-volume-slash');
-    HTMLElements.volumeToggleBtn.classList.remove('fa-volume');
-  } else {
-    HTMLElements.volumeToggleBtn.classList.remove('fa-volume-slash');
-    HTMLElements.volumeToggleBtn.classList.add('fa-volume');
-  }
-  if (app.soundVolume) app.switchSounds(false);
-};
-
-export const switchMusicVolume = (app) => {
-  HTMLElements.musicToggleBtn.classList.toggle('fa-music');
-  HTMLElements.musicToggleBtn.classList.toggle('fa-music-slash');
-  if (app.isMusicPlaying) {
-    app.bgAudio.pause();
-    app.timeGameBg.pause();
-    app.finishTimeGame();
-  } else if (app.inGame && !app.isAnswerChoised && app.isTimerOn) {
-    app.timeGameBg.play();
-  } else app.bgAudio.play();
-  app.switchMusicVolume();
-};
-
-export const changeMusicVolume = (app) => {
-  app.changeMusicVolume(HTMLElements.musicVolumeInput.value / 100);
-};
-
 export const restorePlayingMusic = (app) => {
   if (app.isMusicPlaying) app.bgAudio.play();
+};
+
+export const enableRestoreMusicPlaying = (app) => {
+  window.addEventListener('mouseup', () => restorePlayingMusic(app), {
+    once: true,
+  });
+};
+
+export const enableButtonSounds = (app) => {
+  document.body.addEventListener('click', (e) => {
+    if (
+      e.target.classList.contains('_btn') ||
+      e.target.parentNode.classList.contains('_btn')
+    ) {
+      playSound('click', app);
+    }
+  });
+
+  HTMLElements.allInputsTypeRange.forEach((input) => {
+    input.addEventListener('change', () => playSound('click', app));
+  });
 };

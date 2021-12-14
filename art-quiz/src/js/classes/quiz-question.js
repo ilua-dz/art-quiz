@@ -1,116 +1,140 @@
+const getImageHTML = (imageDescriptionObject) => {
+  const imageHTML = document.createElement('img');
+  imageHTML.src = `https://raw.githubusercontent.com/ilua-dz/art-quiz-gallery/main/full/${imageDescriptionObject.imageNum}full.avif`;
+  imageHTML.alt = `${imageDescriptionObject.name}`;
+  return imageHTML;
+};
+
+const getRandomPicture = (gallery) => {
+  const picNumber = Math.floor(Math.random() * gallery.length);
+  return gallery[picNumber];
+};
+
+const shuffleArray = (array) => {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+};
+
+const getTimerHTML = () => {
+  const timerBlock = document.createElement('div');
+  timerBlock.classList.add('timer-block');
+
+  const leftTimeBlock = document.createElement('div');
+  leftTimeBlock.classList.add('time-left-block');
+
+  timerBlock.append(leftTimeBlock);
+
+  return timerBlock;
+};
+
+const getBackButtonHTML = () => {
+  const backBtn = document.createElement('i');
+  backBtn.classList.add(
+    'fa-thin',
+    'fa-square-left',
+    'decorate-button',
+    'fa-sizing',
+    '_btn',
+    'back-levels'
+  );
+  return backBtn;
+};
 class QuizQuestion {
-  constructor(_quizType, levelNumber, gallery) {
-    this.quizType = _quizType;
+  constructor(levelNumber, app) {
+    this.quizType = app.quizType;
     this.levelNumber = levelNumber;
     this.questionNumber = 0;
-    this.gallery = gallery;
+    this.gallery = app.galleryArr;
+    this.app = app;
+  }
 
-    this.picObj = () => {
-      const picNumber =
-        _quizType * 120 + levelNumber * 10 + this.questionNumber;
-      return gallery[picNumber];
-    };
-
-    this.picElement = (picObj) => {
-      this.picture = new Image();
-      this.picture.src = `https://raw.githubusercontent.com/ilua-dz/art-quiz-gallery/main/full/${picObj.imageNum}full.avif`;
-      this.nextPicture = new Image();
-      this.nextPicture.src = `https://raw.githubusercontent.com/ilua-dz/art-quiz-gallery/main/full/${
-        +picObj.imageNum + 1
-      }full.avif`;
-
-      const pic = document.createElement('img');
-      pic.src = this.picture.src;
-      pic.alt = `${picObj.name}`;
-      return pic;
-    };
+  #rightAnswerDescriptionObject() {
+    const picNumber =
+      this.quizType * 120 + this.levelNumber * 10 + this.questionNumber;
+    return this.app.galleryArr[picNumber];
   }
 
   nextQuestion() {
     this.questionNumber += 1;
   }
 
-  getAnswers() {
-    const newRandomPic = (slicedGallery) => {
-      const picNumber = Math.floor(Math.random() * slicedGallery.length);
-      return slicedGallery[picNumber];
-    };
-
-    let randomGallery = this.gallery.slice(
+  #getLevelGallery() {
+    this.levelGallery = this.gallery.slice(
       this.quizType * 120,
       this.quizType * 120 + 120
     );
-    randomGallery.splice(this.levelNumber * 10, 10);
-    randomGallery = randomGallery.filter(
-      (pic) => pic.author.toUpperCase() !== this.picObj().author.toUpperCase()
-    );
+    this.levelGallery.splice(this.levelNumber * 10, 10);
+  }
 
+  #filterLevelGallery(author) {
+    this.levelGallery = this.levelGallery.filter(
+      (pic) => pic.author.toUpperCase() !== author.toUpperCase()
+    );
+  }
+
+  #getWrongAnswers() {
     const falseAnswers = [];
     for (let i = 0; i < 3; i += 1) {
-      const randomPic = newRandomPic(randomGallery);
-      const randomAuthor = randomPic.author;
+      const randomPic = getRandomPicture(this.levelGallery);
       falseAnswers.push(randomPic);
-      randomGallery = randomGallery.filter(
-        (pic) => pic.author.toUpperCase() !== randomAuthor.toUpperCase()
-      );
+      this.#filterLevelGallery(randomPic.author);
     }
+    return falseAnswers;
+  }
 
-    falseAnswers.push(this.picObj());
-    const answers = falseAnswers;
+  #getAnswerSet() {
+    const answerSet = this.#getWrongAnswers();
+    answerSet.push(this.#rightAnswerDescriptionObject());
+    return shuffleArray(answerSet);
+  }
 
-    for (let i = answers.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [answers[i], answers[j]] = [answers[j], answers[i]];
-    }
+  #getQuestionAnswers() {
+    this.#getLevelGallery();
+    this.#filterLevelGallery(this.#rightAnswerDescriptionObject().author);
 
-    const trueAnswerNumber = answers.indexOf(this.picObj());
+    const answers = this.#getAnswerSet();
+    const trueAnswerNumber = answers.indexOf(
+      this.#rightAnswerDescriptionObject()
+    );
+
     return { trueAnswerNumber, answers };
   }
 
-  getQuestion() {
-    const node = document.createElement('div');
-
-    const answerSet = this.getAnswers();
+  #getQuestion() {
+    const answerSet = this.#getQuestionAnswers();
     this.trueAnswerNumber = answerSet.trueAnswerNumber;
 
-    const title = document.createElement('h2');
+    const questionBodyHTML = document.createElement('div');
+    const backButton = getBackButtonHTML();
+    questionBodyHTML.append(backButton);
 
-    const timerEl = document.createElement('div');
-    timerEl.classList.add('timer-block');
+    const questionTitleHTML = document.createElement('h2');
 
-    const timeLeftEl = document.createElement('div');
-    timeLeftEl.classList.add('time-left-block');
-
-    timerEl.append(timeLeftEl);
-
-    this.backBtn = document.createElement('i');
-    this.backBtn.classList.add(
-      'fa-thin',
-      'fa-square-left',
-      'decorate-button',
-      'fa-sizing',
-      '_btn',
-      'back-levels'
-    );
-    node.append(this.backBtn);
+    const qustionTimerHTML = getTimerHTML();
 
     return {
-      node,
       answerSet,
-      title,
-      timerEl,
+      questionBodyHTML,
+      questionTitleHTML,
+      qustionTimerHTML,
     };
   }
 
   getArtistQuizQuestion() {
-    const question = this.getQuestion();
+    const question = this.#getQuestion();
 
-    const pic = this.picElement(this.picObj());
+    const qustionSubject = getImageHTML(this.#rightAnswerDescriptionObject());
+    this.artistQuizImageLink = qustionSubject.src; // for preload image
 
-    question.title.textContent = 'Who is the author of the picture?';
+    question.questionTitleHTML.textContent =
+      'Who is the author of the picture?';
 
     const answersList = document.createElement('ul');
-    answersList.append(question.timerEl);
+    answersList.append(question.qustionTimerHTML);
 
     question.answerSet.answers.forEach((answer) => {
       const answerString = document.createElement('li');
@@ -119,34 +143,43 @@ class QuizQuestion {
       answersList.append(answerString);
     });
 
-    question.node.append(pic, question.title, answersList);
-    return question.node.innerHTML;
+    question.questionBodyHTML.append(
+      qustionSubject,
+      question.questionTitleHTML,
+      answersList
+    );
+    return question.questionBodyHTML.innerHTML;
   }
 
   getPictureQuizQuestion() {
-    this.picQuizImagesSrc = []; // for preload images
-    const question = this.getQuestion();
+    const question = this.#getQuestion();
 
-    question.title.textContent = `Choose a picture by ${this.picObj().author}`;
-    question.timerEl.classList.add('width-100');
-    question.title.append(question.timerEl);
+    this.pictureQuizImageLinks = []; // for preload images
 
-    question.answerSet.answers.forEach((picObj, answerNumber) => {
-      const answerImg = this.picElement(picObj);
-      answerImg.classList.add('pic-answer', 'pic-btn', '_btn');
-      question.node.append(answerImg);
-      if (answerNumber === 1) question.node.append(question.title);
-      this.picQuizImagesSrc.push(answerImg.src); // for preload images
-    });
+    question.questionTitleHTML.textContent = `Choose a picture by ${
+      this.#rightAnswerDescriptionObject().author
+    }`;
+    question.questionTitleHTML.append(question.qustionTimerHTML);
 
-    return question.node.innerHTML;
+    question.answerSet.answers.forEach(
+      (pictureDescriptionObject, answerNumber) => {
+        const answerImageHTML = getImageHTML(pictureDescriptionObject);
+        answerImageHTML.classList.add('pic-answer', 'pic-btn', '_btn');
+        question.questionBodyHTML.append(answerImageHTML);
+        if (answerNumber === 1)
+          question.questionBodyHTML.append(question.questionTitleHTML);
+        this.pictureQuizImageLinks.push(answerImageHTML.src); // for preload images
+      }
+    );
+
+    return question.questionBodyHTML.innerHTML;
   }
 
-  getTrueAnswerPopup(trueness) {
+  getTrueAnswerPopup(isAnswerRight) {
     const popup = document.createElement('div');
 
     const answerIndicator = document.createElement('i');
-    const answerClass = trueness
+    const answerClass = isAnswerRight
       ? ['fa-circle-check', 'trueBg']
       : ['fa-circle-xmark', 'falseBg'];
     answerIndicator.classList.add(
@@ -156,12 +189,16 @@ class QuizQuestion {
       ...answerClass
     );
 
-    const pic = this.picElement(this.picObj());
+    const rightAnswerPicture = getImageHTML(
+      this.#rightAnswerDescriptionObject()
+    );
 
     const description = document.createElement('div');
-    description.innerHTML = `<h2>${this.picObj().name}</h2>
-    <h2>${this.picObj().author}</h2>
-    <h2>${this.picObj().year}</h2>`;
+    description.innerHTML = `<h2>${
+      this.#rightAnswerDescriptionObject().name
+    }</h2>
+    <h2>${this.#rightAnswerDescriptionObject().author}</h2>
+    <h2>${this.#rightAnswerDescriptionObject().year}</h2>`;
 
     const nextPicBtn = document.createElement('i');
     nextPicBtn.classList.add(
@@ -173,7 +210,7 @@ class QuizQuestion {
       'next-btn'
     );
 
-    popup.append(answerIndicator, pic, description, nextPicBtn);
+    popup.append(answerIndicator, rightAnswerPicture, description, nextPicBtn);
 
     return popup.innerHTML;
   }

@@ -1,7 +1,21 @@
-import { audioLib } from '../utils/sounds';
+import { audioLib, timeGameMusicToggle } from '../utils/sounds';
+import { HTMLElements } from '../utils/html-elements';
+import { wrongAnswerNumber } from '../utils/definitions';
+import QuizQuestion from './quiz-question';
 
+const saveSwitch = (switchName, localStorageKey) => {
+  if (switchName) {
+    localStorage.setItem(localStorageKey, '1');
+  } else localStorage.removeItem(localStorageKey);
+};
 class Application {
   constructor() {
+    this.#appInit();
+  }
+
+  #appInit() {
+    this.#getGallery();
+
     this.inGame = false;
     this.isAnswerChosen = false;
     this.quizType = undefined;
@@ -9,6 +23,7 @@ class Application {
     this.trueAnswersCounter = undefined;
     this.levelResultString = undefined;
     this.question = undefined;
+    this.timerId = undefined;
 
     this.soundVolume = localStorage.getItem('soundVolume')
       ? +localStorage.getItem('soundVolume')
@@ -32,37 +47,63 @@ class Application {
     this.setMusicVolume();
   }
 
+  async #getGallery() {
+    const res = await fetch('./assets/gallery/gallery_data_en.json');
+    const data = await res.json();
+    this.galleryArr = data;
+  }
+
   finishTimeGame() {
     this.timeGameBg.currentTime = 0;
   }
 
-  startGame() {
+  startGame(levelNumber) {
     this.levelResultString = '';
     this.answersCounter = 0;
     this.trueAnswersCounter = 0;
     this.inGame = true;
     this.isAnswerChosen = false;
+    this.question = new QuizQuestion(levelNumber);
+  }
+
+  startTimer() {
+    this.timerId = setTimeout(() => {
+      if (!this.isAnswerChosen) chooseAnswer(wrongAnswerNumber);
+    }, this.timerTime * 1000 + 800);
+  }
+
+  questionLaunch() {
+    this.isAnswerChosen = false;
+  }
+
+  leaveGame() {
+    clearTimeout(this.timerId);
+    timeGameMusicToggle(false, this);
+    this.inGame = false;
+    this.isAnswerChosen = false;
+    HTMLElements.artistQuizModule.innerHTML = '';
+    HTMLElements.picQuizModule.innerHTML = '';
   }
 
   switchSounds(direction = undefined) {
     if (direction === false) this.isSoundVolumeMute = false;
     else this.isSoundVolumeMute = !this.isSoundVolumeMute;
-    this.saveSoundSwitch();
+    this.#saveSoundSwitch();
   }
 
-  switchMusicVolume() {
+  switchMusic() {
     this.isMusicPlaying = !this.isMusicPlaying;
-    this.saveMusicSwitch();
+    this.#saveMusicSwitch();
   }
 
   switchTimer() {
     this.isTimerOn = !this.isTimerOn;
-    this.saveTimerSwitch();
+    this.#saveTimerSwitch();
   }
 
   changeSoundVolume(volume) {
     this.soundVolume = volume;
-    this.saveSoundVolume();
+    this.#saveSoundVolume();
   }
 
   setMusicVolume() {
@@ -73,42 +114,36 @@ class Application {
   changeMusicVolume(volume) {
     this.musicVolume = volume;
     this.setMusicVolume();
-    this.saveMusicVolume();
+    this.#saveMusicVolume();
   }
 
   changeTimerTime(time) {
     this.timerTime = time;
-    this.saveTimerTime();
+    this.#saveTimerTime();
   }
 
-  saveSoundVolume() {
+  #saveSoundVolume() {
     localStorage.setItem('soundVolume', this.soundVolume);
   }
 
-  saveSoundSwitch() {
-    if (this.isSoundVolumeMute) {
-      localStorage.setItem('isSoundVolumeMute', '1');
-    } else localStorage.removeItem('isSoundVolumeMute');
+  #saveSoundSwitch() {
+    saveSwitch(this.isSoundVolumeMute, 'isSoundVolumeMute');
   }
 
-  saveMusicVolume() {
+  #saveMusicVolume() {
     localStorage.setItem('musicVolume', this.musicVolume);
   }
 
-  saveMusicSwitch() {
-    if (this.isMusicPlaying) {
-      localStorage.setItem('isMusicPlaying', '1');
-    } else localStorage.removeItem('isMusicPlaying');
+  #saveMusicSwitch() {
+    saveSwitch(this.isMusicPlaying, 'isMusicPlaying');
   }
 
-  saveTimerTime() {
+  #saveTimerTime() {
     localStorage.setItem('timerTime', this.timerTime);
   }
 
-  saveTimerSwitch() {
-    if (this.isTimerOn) {
-      localStorage.setItem('isTimerOn', '1');
-    } else localStorage.removeItem('isTimerOn');
+  #saveTimerSwitch() {
+    saveSwitch(this.isTimerOn, 'isTimerOn');
   }
 }
 

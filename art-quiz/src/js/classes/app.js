@@ -1,7 +1,7 @@
 import { audioLib, timeGameMusicToggle } from '../utils/sounds';
 import { HTMLElements } from '../utils/html-elements';
-import { wrongAnswerNumber } from '../utils/definitions';
 import QuizQuestion from './quiz-question';
+import timerStart from '../utils/timer';
 
 const saveSwitch = (switchName, localStorageKey) => {
   if (switchName) {
@@ -63,13 +63,14 @@ class Application {
     this.trueAnswersCounter = 0;
     this.inGame = true;
     this.isAnswerChosen = false;
-    this.question = new QuizQuestion(levelNumber);
+    this.question = new QuizQuestion(levelNumber, this);
   }
 
-  startTimer() {
+  startTimer(chooseWrongAnswer) {
     this.timerId = setTimeout(() => {
-      if (!this.isAnswerChosen) chooseAnswer(wrongAnswerNumber);
+      if (!this.isAnswerChosen) chooseWrongAnswer();
     }, this.timerTime * 1000 + 800);
+    timerStart(this);
   }
 
   questionLaunch() {

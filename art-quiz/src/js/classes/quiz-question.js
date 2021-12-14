@@ -127,8 +127,8 @@ class QuizQuestion {
   getArtistQuizQuestion() {
     const question = this.#getQuestion();
 
-    const qustionSubject = getImageHTML(this.#rightAnswerDescriptionObject());
-    this.artistQuizImageLink = qustionSubject.src; // for preload image
+    const questionSubject = getImageHTML(this.#rightAnswerDescriptionObject());
+    this.artistQuizImageLink = questionSubject.src; // for preload image
 
     question.questionTitleHTML.textContent =
       'Who is the author of the picture?';
@@ -144,7 +144,7 @@ class QuizQuestion {
     });
 
     question.questionBodyHTML.append(
-      qustionSubject,
+      questionSubject,
       question.questionTitleHTML,
       answersList
     );

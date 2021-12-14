@@ -1,17 +1,19 @@
 {
+  "parser": "@babel/eslint-parser",
   "env": {
     "browser": true,
     "es2021": true
   },
   "extends": ["airbnb-base", "eslint:recommended", "prettier"],
   "parserOptions": {
+    "requireConfigFile": false,
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 12,
+    "ecmaVersion": 2021,
     "sourceType": "module"
   },
-  "plugins": ["prettier"],
+  "plugins": ["@babel", "prettier"],
   "rules": {
     "prettier/prettier": "error"
   }

@@ -4,6 +4,9 @@
   "description": "rolling scopes school js/fe course 2021Q3 stage1 final task",
   "main": "index.js",
   "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/eslint-parser": "^7.16.5",
+    "@babel/eslint-plugin": "^7.16.5",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.0.0",
     "css-loader": "^6.5.1",

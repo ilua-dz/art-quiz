@@ -5,7 +5,7 @@ import cssUtils from './css-utils';
 
 const timerStart = (app) => {
   timeGameMusicToggle(true, app);
-  HTMLElements.timerBlock().classList.add(cssUtils.timerOn);
+  HTMLElements.timerBlock().classList.add(cssUtils.color);
   HTMLElements.timeLeftBlock().classList.add(`trans-width-${app.timerTime}`);
   setTimeout(() => {
     HTMLElements.timeLeftBlock().classList.add('width-0');

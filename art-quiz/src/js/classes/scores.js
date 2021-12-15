@@ -1,71 +1,64 @@
+import { quizTypeNames, getLevelResultKey } from '../utils/definitions';
+import { getImageHTML, getBackButtonHTML } from './quiz-question';
+import cssUtils from '../utils/css-utils';
+
 class Scores {
-  constructor(quizType, levelNumber, gallery) {
-    this.gallery = [...gallery];
+  constructor(levelNumber, app) {
+    this.app = app;
+    this.firstPictureNumber = app.quizType * 120 + levelNumber * 10 - 10;
 
-    this.firstPicNumber = quizType * 120 + levelNumber * 10;
-    let picNumber = this.firstPicNumber;
+    this.bodyHTML = document.createElement('div');
 
-    this.node = document.createElement('div');
-
-    const levelResultKey = `quizType_${quizType}_level_${levelNumber}_result`;
+    const levelResultKey = getLevelResultKey(app.quizType, levelNumber);
     const levelResult = localStorage.getItem(levelResultKey)
       ? localStorage.getItem(levelResultKey)
       : false;
 
-    const quizTypeNames = ['Artist quiz', 'Picture quiz'];
-    this.titleString = `${quizTypeNames[quizType]} - Level ${
-      levelNumber + 1
-    } - Pictures`;
+    this.titleString = `${
+      quizTypeNames[app.quizType]
+    } - Level ${levelNumber} - Pictures`;
 
-    this.getPic = (picNum, full = false) => {
-      const pic = document.createElement('img');
-      pic.src = full
-        ? `https://raw.githubusercontent.com/ilua-dz/art-quiz-gallery/main/full/${picNum}full.avif`
-        : `https://raw.githubusercontent.com/ilua-dz/art-quiz-gallery/main/img/${picNum}.avif`;
-      pic.alt = `${gallery[picNumber].name}`;
-      return pic;
-    };
-
-    this.picsSrc = []; // for preload images
+    this.scoresImageLinks = []; // for preload images
 
     for (let i = 0; i < 10; i += 1) {
-      const pic = this.getPic(picNumber);
-      this.picsSrc.push(pic.src);
+      const pic = getImageHTML(
+        this.app.galleryArr[this.firstPictureNumber + i],
+        false
+      );
       pic.classList.add('scores-pic-btn');
+
       if (levelResult) {
         if (levelResult[i] === '1') {
-          pic.classList.add('grayscale-0', 'pic-btn', 'resolved-pic');
+          pic.classList.add(cssUtils.color, 'pic-btn', 'resolved-pic');
         } else {
           pic.classList.add('secret-pic');
         }
       }
-      this.node.append(pic);
-      picNumber += 1;
+
+      this.scoresImageLinks.push(pic.src); // for preload images
+
+      this.bodyHTML.append(pic);
     }
   }
 
-  getInfoPopup(picNumber) {
+  getInfoPopup(imageNumber) {
     const popup = document.createElement('div');
 
-    const picElement = this.getPic(picNumber, 1);
-    const pic = this.gallery[picNumber];
-    this.picSrc = picElement.src;
+    const imageHTML = getImageHTML(this.app.galleryArr[imageNumber]);
+    const imageDescriptionObject = this.app.galleryArr[imageNumber];
+
+    this.imageLink = imageHTML.src; // for preload image
 
     const description = document.createElement('div');
-    description.innerHTML = `<h2>${pic.name}</h2><h2>${pic.author}</h2><h2>${pic.year}</h2>`;
+    description.innerHTML = `<h2>${imageDescriptionObject.name}</h2><h2>${imageDescriptionObject.author}</h2><h2>${imageDescriptionObject.year}</h2>`;
 
-    const backBtn = document.createElement('i');
-    backBtn.classList.add(
-      'fa-regular',
-      'fa-square-left',
-      'fa-sizing',
-      '_btn',
-      'decorate-button',
+    const backBtn = getBackButtonHTML(
+      'popup-close-btn',
       'back-btn',
-      'popup-close-btn'
+      'fa-regular'
     );
 
-    popup.append(picElement, description, backBtn);
+    popup.append(imageHTML, description, backBtn);
 
     return popup.innerHTML;
   }

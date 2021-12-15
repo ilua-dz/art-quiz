@@ -1,3 +1,5 @@
+import { getBackButtonHTML } from './quiz-question';
+
 class FinishLevelPopup {
   constructor(trueAnswersCount) {
     this.popup = document.createElement('div');
@@ -8,13 +10,8 @@ class FinishLevelPopup {
   <h2>Your result:</h2>
   <h2>${trueAnswersCount}/10</h2>`;
 
-    this.backBtn = document.createElement('i');
-    this.backBtn.classList.add(
+    this.backBtn = getBackButtonHTML(
       'fa-thin',
-      'fa-square-left',
-      'decorate-button',
-      'fa-sizing',
-      '_btn',
       'back-levels',
       'popup-back-levels'
     );

@@ -1,6 +1,10 @@
-const getImageHTML = (imageDescriptionObject) => {
+import { getImageURL } from '../utils/definitions';
+
+export const getImageHTML = (imageDescriptionObject, getFullImage = true) => {
   const imageHTML = document.createElement('img');
-  imageHTML.src = `https://raw.githubusercontent.com/ilua-dz/art-quiz-gallery/main/full/${imageDescriptionObject.imageNum}full.avif`;
+  imageHTML.src = getFullImage
+    ? getImageURL(imageDescriptionObject.imageNum, 'full')
+    : getImageURL(imageDescriptionObject.imageNum, 'small');
   imageHTML.alt = `${imageDescriptionObject.name}`;
   return imageHTML;
 };
@@ -31,18 +35,18 @@ const getTimerHTML = () => {
   return timerBlock;
 };
 
-const getBackButtonHTML = () => {
+export const getBackButtonHTML = (...addClasses) => {
   const backBtn = document.createElement('i');
   backBtn.classList.add(
-    'fa-thin',
     'fa-square-left',
-    'decorate-button',
     'fa-sizing',
     '_btn',
-    'back-levels'
+    'decorate-button',
+    ...addClasses
   );
   return backBtn;
 };
+
 class QuizQuestion {
   constructor(levelNumber, app) {
     this.quizType = app.quizType;
@@ -54,7 +58,7 @@ class QuizQuestion {
 
   #rightAnswerDescriptionObject() {
     const picNumber =
-      this.quizType * 120 + this.levelNumber * 10 + this.questionNumber;
+      this.quizType * 120 + this.levelNumber * 10 - 10 + this.questionNumber;
     return this.app.galleryArr[picNumber];
   }
 
@@ -109,7 +113,7 @@ class QuizQuestion {
     this.trueAnswerNumber = answerSet.trueAnswerNumber;
 
     const questionBodyHTML = document.createElement('div');
-    const backButton = getBackButtonHTML();
+    const backButton = getBackButtonHTML('fa-thin', 'back-levels');
     questionBodyHTML.append(backButton);
 
     const questionTitleHTML = document.createElement('h2');

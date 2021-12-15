@@ -1,7 +1,7 @@
 import '../css/style.css';
 
 import Application from './classes/app';
-import GameUtils from './classes/game-utils';
+import GameUtils from './utils/game-utils';
 
 import enableMainMenuTransitions from './utils/main-menu-transitions';
 

@@ -1,31 +1,31 @@
-import {
-  HTMLElements,
-  staticModules,
-  gameModules,
-} from '../utils/html-elements';
+import { HTMLElements, staticModules, gameModules } from './html-elements';
 
-import { togglePopup, smoothChangePage } from '../utils/render-functions';
+import { togglePopup, smoothChangePage } from './render-functions';
 
-import preloadImages from '../utils/images-preload-function';
+import preloadImages from './images-preload-function';
 
-import LevelCard from './level-card';
-import FinishLevelPopup from './finish-level-popup';
-import Scores from './scores';
+import LevelCard from '../classes/level-card';
+import FinishLevelPopup from '../classes/finish-level-popup';
+import Scores from '../classes/scores';
 
 import {
   quizTypeNames,
   wrongAnswerNumber,
   quizTypeNumbers,
-} from '../utils/definitions';
+  getLevelResultKey,
+} from './definitions';
 
-import { timeGameMusicToggle, playSound } from '../utils/sounds';
+import { timeGameMusicToggle, playSound } from './sounds';
 
 const saveLevelResult = (app, failed = false) => {
-  const levelNumber = `quizType_${app.question.quizType}_level_${app.question.levelNumber}`;
+  const levelResultKey = getLevelResultKey(
+    app.question.quizType,
+    app.question.levelNumber
+  );
   if (!failed) {
-    localStorage.setItem(`${levelNumber}_result`, app.levelResultString);
+    localStorage.setItem(levelResultKey, app.levelResultString);
   } else {
-    localStorage.removeItem(`${levelNumber}_result`);
+    localStorage.removeItem(levelResultKey);
   }
 };
 
@@ -37,10 +37,10 @@ const enableHidePicInfo = () => {
 
 const showPicInfo = (picNumber, scoresPage) => {
   HTMLElements.picInfoPopup.innerHTML = scoresPage.getInfoPopup(
-    scoresPage.firstPicNumber + picNumber
+    scoresPage.firstPictureNumber + picNumber
   );
 
-  preloadImages([scoresPage.picSrc], () =>
+  preloadImages([scoresPage.imageLink], () =>
     togglePopup(HTMLElements.picInfoPopupContainer, true)
   );
   enableHidePicInfo();
@@ -56,9 +56,9 @@ const enableShowPicInfo = (scoresPage) => {
   });
 };
 
-const displayAnswerChosenPopup = (isAnswerRight) => {
+const displayAnswerChosenPopup = (app, isAnswerRight) => {
   HTMLElements.picInfoPopup.innerHTML =
-    this.app.question.getTrueAnswerPopup(isAnswerRight);
+    app.question.getTrueAnswerPopup(isAnswerRight);
   togglePopup(HTMLElements.picInfoPopupContainer, true);
 };
 
@@ -78,7 +78,7 @@ const displayLevelsPage = (app) => {
 const renderLevelCards = (app) => {
   const allLevelCardsImageLinks = [];
   for (let level = 1; level <= 12; level += 1) {
-    const card = new LevelCard(level, app.quizType, app.galleryArr);
+    const card = new LevelCard(level, app);
     const levelResult = localStorage.getItem(card.levelResultKey)
       ? localStorage.getItem(card.levelResultKey)
       : false;
@@ -99,7 +99,7 @@ class GameUtils {
       HTMLElements.levelCardIndicator(card)?.addEventListener(
         'click',
         (event) => {
-          this.renderScores(cardNumber);
+          this.renderScores(cardNumber + 1);
           event.stopPropagation();
         }
       );
@@ -129,15 +129,11 @@ class GameUtils {
   }
 
   renderScores(levelNumber) {
-    const scoresPage = new Scores(
-      this.app.quizType,
-      levelNumber,
-      this.app.galleryArr
-    );
-    HTMLElements.scoresContainer.innerHTML = scoresPage.node.innerHTML;
+    const scoresPage = new Scores(levelNumber, this.app);
+    HTMLElements.scoresContainer.innerHTML = scoresPage.bodyHTML.innerHTML;
     HTMLElements.scoresTitle.textContent = scoresPage.titleString;
 
-    preloadImages(scoresPage.picsSrc, () =>
+    preloadImages(scoresPage.scoresImageLinks, () =>
       smoothChangePage(HTMLElements.scoresModule, ...staticModules)
     );
 
@@ -165,7 +161,7 @@ class GameUtils {
 
     this.app.levelResultString += isAnswerRight ? '1' : '0';
 
-    displayAnswerChosenPopup(isAnswerRight);
+    displayAnswerChosenPopup(this.app, isAnswerRight);
     this.enableMoveToNextQuestion();
   }
 
@@ -259,7 +255,7 @@ class GameUtils {
 
   enableLevelStart() {
     HTMLElements.levelCards().forEach((card, cardNumber) => {
-      card.addEventListener('click', () => this.levelStart(cardNumber));
+      card.addEventListener('click', () => this.levelStart(cardNumber + 1));
     });
   }
 }

@@ -63,5 +63,4 @@ export const staticModules = [
   HTMLElements.artistQuizModule,
   HTMLElements.picQuizModule,
   HTMLElements.scoresModule,
-  HTMLElements.footer,
 ];

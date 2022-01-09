@@ -21,7 +21,6 @@ export const smoothChangePage = (onModule, ...allModules) => {
       if (module !== onModule) module.classList.toggle(cssUtils.offClass);
       else module.classList.toggle(cssUtils.onClass);
     });
-    HTMLElements.footer.classList.toggle(cssUtils.offClass);
     if (gameModules.includes(onModule)) toggleHeader();
     else toggleHeader(1);
   }, 300);

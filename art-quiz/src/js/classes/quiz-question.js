@@ -9,6 +9,13 @@ export const getImageHTML = (imageDescriptionObject, getFullImage = true) => {
   return imageHTML;
 };
 
+export const quizOptions = {
+  questionsAmountInLevel: 10,
+  levelsAmountInQuizType: 12,
+  questionsAmountInQuizType: 10 * 12,
+  wrongAnswersAmountInQuestion: 3,
+};
+
 const getRandomPicture = (gallery) => {
   const picNumber = Math.floor(Math.random() * gallery.length);
   return gallery[picNumber];
@@ -54,11 +61,19 @@ class QuizQuestion {
     this.questionNumber = 0;
     this.gallery = app.galleryArr;
     this.app = app;
+
+    this.quizTypeFirstQuestionNumber =
+      this.quizType * quizOptions.questionsAmountInQuizType;
+    this.levelFirstQuestionNumber =
+      this.levelNumber * quizOptions.questionsAmountInLevel;
   }
 
   #rightAnswerDescriptionObject() {
     const picNumber =
-      this.quizType * 120 + this.levelNumber * 10 - 10 + this.questionNumber;
+      this.quizTypeFirstQuestionNumber +
+      this.levelFirstQuestionNumber -
+      quizOptions.questionsAmountInLevel +
+      this.questionNumber;
     return this.app.galleryArr[picNumber];
   }
 
@@ -68,10 +83,13 @@ class QuizQuestion {
 
   #getLevelGallery() {
     this.levelGallery = this.gallery.slice(
-      this.quizType * 120,
-      this.quizType * 120 + 120
+      this.quizTypeFirstQuestionNumber,
+      this.quizTypeFirstQuestionNumber + quizOptions.questionsAmountInQuizType
     );
-    this.levelGallery.splice(this.levelNumber * 10, 10);
+    this.levelGallery.splice(
+      this.levelFirstQuestionNumber,
+      quizOptions.questionsAmountInLevel
+    );
   }
 
   #filterLevelGallery(author) {
@@ -82,7 +100,7 @@ class QuizQuestion {
 
   #getWrongAnswers() {
     const falseAnswers = [];
-    for (let i = 0; i < 3; i += 1) {
+    for (let i = 0; i < quizOptions.wrongAnswersAmountInQuestion; i += 1) {
       const randomPic = getRandomPicture(this.levelGallery);
       falseAnswers.push(randomPic);
       this.#filterLevelGallery(randomPic.author);

@@ -94,20 +94,20 @@ a {
   text-shadow: 0 0 5px var(--hover-color);
 }
 
-.wrapper {
-  position: relative;
-  width: 50vw;
-  margin-top: 0.5vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+.wrapper,
 .dynamic-page {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.wrapper {
+  width: 50vw;
+  margin-top: 0.5vh;
+}
+
+.dynamic-page {
   width: 100%;
 }
 

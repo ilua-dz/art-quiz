@@ -1,12 +1,18 @@
 import { audioLib, timeGameMusicToggle } from '../utils/sounds';
 import { HTMLElements } from '../utils/html-elements';
 import QuizQuestion from './quiz-question';
-import timerStart from '../utils/timer';
+import timerStart, { oneSecond, timerStartDelayTime } from '../utils/timer';
 
 const saveSwitch = (switchName, localStorageKey) => {
   if (switchName) {
     localStorage.setItem(localStorageKey, '1');
   } else localStorage.removeItem(localStorageKey);
+};
+
+const defaultSettings = {
+  soundVolume: 0.6,
+  musicVolume: 0.8,
+  timerTime: 20,
 };
 class Application {
   constructor() {
@@ -27,15 +33,15 @@ class Application {
 
     this.soundVolume = localStorage.getItem('soundVolume')
       ? +localStorage.getItem('soundVolume')
-      : 0.6;
+      : defaultSettings.soundVolume;
 
     this.musicVolume = localStorage.getItem('musicVolume')
       ? +localStorage.getItem('musicVolume')
-      : 0.8;
+      : defaultSettings.musicVolume;
 
     this.timerTime = localStorage.getItem('timerTime')
       ? +localStorage.getItem('timerTime')
-      : 20;
+      : defaultSettings.timerTime;
 
     this.isSoundVolumeMute = !!localStorage.getItem('isSoundVolumeMute');
     this.isMusicPlaying = !!localStorage.getItem('isMusicPlaying');
@@ -69,7 +75,7 @@ class Application {
   startTimer(chooseWrongAnswer) {
     this.timerId = setTimeout(() => {
       if (!this.isAnswerChosen) chooseWrongAnswer();
-    }, this.timerTime * 1000 + 800);
+    }, this.timerTime * oneSecond + timerStartDelayTime);
     timerStart(this);
   }
 

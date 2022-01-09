@@ -1,5 +1,6 @@
 import cssUtils from '../utils/css-utils';
 import { getImageURL, getLevelResultKey } from '../utils/definitions';
+import { quizOptions } from './quiz-question';
 
 const parseLevelResult = (levelResult) =>
   levelResult.split('').reduce((sum, i) => sum + +i, 0);
@@ -18,10 +19,12 @@ const appendLevelIndicator = (card, levelResult) => {
 };
 
 const getLevelRandomPicDescription = (levelNumber, app) => {
-  const levelImgStartNumber = levelNumber * 10 - 10 + app.quizType * 120;
+  const levelImgStartNumber =
+    app.quizType * quizOptions.questionsAmountInQuizType +
+    (levelNumber - 1) * quizOptions.questionsAmountInLevel;
   const levelPics = app.galleryArr.slice(
     levelImgStartNumber,
-    levelImgStartNumber + 10
+    levelImgStartNumber + quizOptions.questionsAmountInLevel
   );
 
   return levelPics[Math.floor(Math.random() * levelPics.length)];

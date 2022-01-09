@@ -1,11 +1,13 @@
 import { quizTypeNames, getLevelResultKey } from '../utils/definitions';
-import { getImageHTML, getBackButtonHTML } from './quiz-question';
+import { getImageHTML, getBackButtonHTML, quizOptions } from './quiz-question';
 import cssUtils from '../utils/css-utils';
 
 class Scores {
   constructor(levelNumber, app) {
     this.app = app;
-    this.firstPictureNumber = app.quizType * 120 + levelNumber * 10 - 10;
+    this.firstPictureNumber =
+      app.quizType * quizOptions.questionsAmountInQuizType +
+      (levelNumber - 1) * quizOptions.questionsAmountInLevel;
 
     this.bodyHTML = document.createElement('div');
 
@@ -20,7 +22,7 @@ class Scores {
 
     this.scoresImageLinks = []; // for preload images
 
-    for (let i = 0; i < 10; i += 1) {
+    for (let i = 0; i < quizOptions.questionsAmountInLevel; i += 1) {
       const pic = getImageHTML(
         this.app.galleryArr[this.firstPictureNumber + i],
         false

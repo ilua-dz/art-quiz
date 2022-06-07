@@ -2,6 +2,7 @@
   "name": "art-quiz",
   "version": "1.0.0",
   "description": "rolling scopes school js/fe course 2021Q3 stage1 final task",
+  "homepage": "https://ilua-dz.github.io/art-quiz/",
   "main": "index.js",
   "devDependencies": {
     "@babel/core": "^7.16.5",
@@ -15,6 +16,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-prettier": "^4.0.0",
+    "gh-pages": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
     "lodash": "^4.17.21",
     "prettier": "^2.5.1",
@@ -28,7 +30,9 @@
   "scripts": {
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "start": "webpack serve --open --config ./webpack.config.js --env mode=dev"
+    "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "author": "Ilya Dzyuin",
   "license": "ISC"
